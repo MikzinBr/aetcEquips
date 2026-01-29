@@ -27,7 +27,7 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
           <p class="card-text">
             Gerenciar as salas da escola.
           </p>
-          <a href="<?php echo BASEURL; ?>salas" class="btn btn-success w-100">Acessar</a>
+          <a href="<?php echo BASEURL; ?>salas" class="btn btn-primary w-100">Acessar</a>
         </div>
       </div>
     </div>
