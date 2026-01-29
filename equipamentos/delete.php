@@ -1,0 +1,30 @@
+<?php
+require_once '../config.php';
+require_once HEADER_TEMPLATE;
+require_once NAVBAR_TEMPLATE;
+require_once DBAPI;
+
+if (!isset($_SESSION['usuario_id'])) {
+  header("Location: ../login.php");
+  exit;
+}
+
+if ($_SESSION['usuario_tipo'] != 'Direção') {
+  header('Location: index.php?erro=Você não tem permissão para remover um equipamento');
+  exit;
+}
+
+$conn = open_database();
+
+if (!isset($_GET['id'])) {
+  header("Location: index.php");
+  exit;
+}
+
+$id = intval($_GET["id"]);
+
+$stmt = $conn->prepare("DELETE FROM equipamentos WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+header("location: index.php?msg=Equipamento removido com sucesso");
