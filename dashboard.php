@@ -37,7 +37,7 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
         <div class="card-body">
           <h5 class="card-title">Equipamentos</h5>
           <p class="card-text">
-            Visualizar e organizar os equipamentos.
+            Gerenciar os equipamentos.
           </p>
           <a href="<?php echo BASEURL; ?>equipamentos" class="btn btn-primary w-100">Acessar</a>
         </div>
@@ -47,19 +47,14 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
     <div class="col-md-4">
       <div class="card shadow">
         <div class="card-body">
-          <?php if ($tipo_usuario === "Professor") : ?>
-            <h5 class="card-title">Reportar Problema</h5>
-            <p class="card-text">
-              Informar avarias em equipamentos.
-            </p>
-            <a href="<?php echo BASEURL ?>avarias/reportar.php" class="btn btn-warning w-100">Reportar</a>
-          <?php else : ?>
-            <h5 class="card-title">Ver avarias</h5>
-            <p class="card-text">
-              Visualizar histórico de avarias.
-            </p>
-            <a href="<?php echo BASEURL ?>avarias" class="btn btn-primary w-100">Acessar</a>
-          <?php endif; ?>
+          <h5 class="card-title">Avarias</h5>
+          <p class="card-text">
+            Visualizar histórico de avarias.
+          </p>
+          <div class="row d-flex justify-content-center px-2">
+            <a href="<?php echo BASEURL ?>avarias" class="btn btn-primary rounded-end-0 col">Acessar</a>
+            <a href="<?php echo BASEURL ?>avarias/reportar.php" class="btn btn-warning rounded-start-0 col">Reportar</a>
+          </div>
         </div>
       </div>
     </div>

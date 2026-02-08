@@ -76,42 +76,19 @@ $result = $conn->query($sql);
           <td><?= htmlspecialchars($a['usuario']) ?></td>
           <td><?= $a['data_registro'] ?></td>
           <td>
-            <?= $a['resolvido'] ? 'Resolvido' : 'Pendente' ?>
+            <label href="resolver.php?id=<?= $a["id"] ?>" class="p-1 text-light rounded bg-<?= $a['resolvido'] ? 'success' : 'danger' ?>"><?= $a['resolvido'] ? 'Resolvido' : 'Pendente' ?></label>
+
+            <?php if ($_SESSION['usuario_tipo'] == "Professor") : ?>
+              <a href="#" class="btn text-tertiary"><span class="far fa-<?= $a['resolvido'] ? 'check-square' : 'square' ?>" </span></a>
+            <?php else : ?>
+              <a href="<?= $a['resolvido'] ? 'reavariar' : 'resolver' ?>.php?id=<?= $a['id'] ?>" class="btn text-<?= $a['resolvido'] ? 'success' : 'danger' ?>"><span class="far fa-<?= $a['resolvido'] ? 'check-square' : 'square' ?>" </span></a>
+            <?php endif; ?>
+
           </td>
           <td>
-            <?php if (!$a['resolvido']): ?>
-              <?php if ($tipo !== 'Professor'): ?>
-                <a href="resolver.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-success col col-5">
-                  <i class="fas fa-check"></i><span class="d-none d-xl-inline"> Marcar como resolvida</span>
-                </a>
-                <?php if ($tipo == "Direção") : ?>
-                  <a href="edit.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-primary col col-3">
-                    <i class="fas fa-edit"></i><span class="d-none d-lg-inline"> Editar</span>
-                  </a>
-                <?php else : ?>
-                  <a href="detalhes.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-primary col col-3">
-                    <i class="fas fa-ellipsis-h"></i><span class="d-none d-xl-inline"> Detalhes</span>
-                  </a>
-                <?php endif; ?>
-              <?php else : ?>
-                <a href="detalhes.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-primary col col-3">
-                  <i class="fas fa-ellipsis-h"></i><span class="d-none d-xl-inline"> Detalhes</span>
-                </a>
-              <?php endif; ?>
-            <?php else : ?>
-              <a href="detalhes.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-primary col col-6">
-                <i class="fas fa-ellipsis-h"></i><span class="d-none d-xl-inline"> Detalhes</span>
-              </a>
-            <?php endif; ?>
-            <?php if ($tipo !== "Técnico") : ?>
-              <a href="delete.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-danger col col-3">
-                <i class="fas fa-trash"></i><span class="d-none d-xl-inline"> Remover</span>
-              </a>
-            <?php elseif ($a['usuario_id'] == $_SESSION['usuario_id']) : ?>
-              <a href="delete.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-danger col col-3">
-                <i class="fas fa-trash"></i><span class="d-none d-xl-inline"> Remover</span>
-              </a>
-            <?php endif; ?>
+            <a href="detalhes.php?id=<?= $a['id'] ?>" class="col col-2 btn btn-primary"><span class="fa fa-info"></span></a>
+            <a href="edit.php?id=<?= $a['id'] ?>" class="col col-2 btn btn-<?= $_SESSION['usuario_tipo'] == "Direção" || $a['usuario_id'] == $_SESSION["usuario_id"] ? "warning" : "secondary disabled" ?>"><span class="fa fa-edit"></span></a>
+            <a href="delete.php?id=<?= $a['id'] ?>" class="col col-2 btn btn-<?= $_SESSION['usuario_tipo'] == "Direção" || $a['usuario_id'] == $_SESSION["usuario_id"] ? "danger" : "secondary disabled" ?>"><span class="fa fa-trash"></span></a>
           </td>
         </tr>
       <?php endwhile; ?>

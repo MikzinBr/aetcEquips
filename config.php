@@ -27,6 +27,5 @@ if (!defined('DBAPI')) {
   define('DBAPI', ABSPATH . 'inc/database.php');
 }
 
-define('HEADER_TEMPLATE', ABSPATH . 'inc/header.html');
+define('HEADER_TEMPLATE', ABSPATH . 'inc/header.php');
 define('NAVBAR_TEMPLATE', ABSPATH . 'inc/navbar.php');
-

@@ -10,11 +10,6 @@ if (!isset($_SESSION['usuario_id'])) {
   exit;
 }
 
-if ($_SESSION['usuario_tipo'] !== "Direção") {
-  header("location: ../login.php");
-  exit;
-}
-
 $conn = open_database();
 
 if (!isset($_GET['id'])) {
@@ -35,6 +30,11 @@ if ($result->num_rows !== 1) {
 }
 
 $avaria = $result->fetch_assoc();
+
+if ($_SESSION['usuario_id'] != $avaria["usuario_id"]) {
+  header("Location: index.php");
+  exit;
+}
 
 $equipamentos = $conn->query("SELECT id, nome FROM equipamentos");
 
