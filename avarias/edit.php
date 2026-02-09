@@ -31,7 +31,7 @@ if ($result->num_rows !== 1) {
 
 $avaria = $result->fetch_assoc();
 
-if ($_SESSION['usuario_id'] != $avaria["usuario_id"]) {
+if ($_SESSION['usuario_id'] != $avaria["usuario_id"] && $_SESSION['usuario_tipo'] != "Direção") {
   header("Location: index.php");
   exit;
 }
