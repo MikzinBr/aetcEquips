@@ -25,21 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $descricao  = trim($_POST['descricao'] ?? '');
   $sala_id    = !empty($_POST['sala_id']) ? intval($_POST['sala_id']) : null;
 
-  $preco_input = str_replace(',', '.', trim($_POST['custo_unitario']));
-
-  if (!is_numeric($preco_input)) {
-    header("Location: add.php?erro=Preço inválido");
-    exit;
-  }
-
-  $custo_centavos = (int) round(floatval($preco_input) * 100);
-
   try {
 
     $stmt = $conn->prepare(
       "INSERT INTO equipamentos
        (nome, codigo, sala_id, quantidade, custo_unitario, descricao)
-       VALUES (?, ?, ?, 1, ?, ?)"
+       VALUES (?, ?, ?, 1, 0, ?)"
     );
 
     for ($i = 1; $i <= $quantidade; $i++) {
@@ -50,12 +41,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $codigo_final = $codigo . '-' . $i;
       }
 
+      $nomeFinal = $nome;
+
+      if (!empty($nome) && $quantidade > 1) {
+        $nomeFinal = $nome . '-' . $i;
+      }
+
+
       $stmt->bind_param(
-        "ssiss",
-        $nome,
+        "ssis",
+        $nomeFinal,
         $codigo_final,
         $sala_id,
-        $custo_centavos,
         $descricao
       );
 
@@ -126,11 +123,6 @@ if (!empty($_GET['sala_id'])) {
     <div class="mb-3">
       <label>Quantidade</label>
       <input type="number" name="quantidade" class="form-control" value="1" min="1" required>
-    </div>
-
-    <div class="mb-3">
-      <label>Custo Unitário (€)</label>
-      <input type="text" name="custo_unitario" class="form-control" placeholder="Ex: 1,23" required>
     </div>
 
     <div class="mb-3">

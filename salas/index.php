@@ -1,5 +1,6 @@
 <?php
 require_once '../config.php';
+require_once '../inc/helpers.php';
 require_once DBAPI;
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
@@ -53,13 +54,16 @@ $result = $conn->query("SELECT * FROM salas ORDER BY numero_sala");
       <?php while ($sala = $result->fetch_assoc()): ?>
         <tr>
           <td><?= htmlspecialchars($sala['numero_sala']) ?></td>
-          <td><?= htmlspecialchars($sala['descricao']) ?></td>
+          <td><?= htmlspecialchars(limitText($sala['descricao'], 30)) ?></td>
           <td>
             <a href="add_equipamentos.php?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-success">
               <i class="fas fa-plus"></i> Adicionar equipamentos
             </a>
             <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-primary">
-              <i class="fas fa-eye"></i> Ver equipamentos
+              <i class="fas fa-eye"></i> Equipamentos
+            </a>
+            <a href="edit.php?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-warning">
+              <i class="fas fa-edit"></i> Editar
             </a>
             <a href="delete.php?id=<?= $sala['id'] ?>"
               class="btn btn-sm btn-danger"

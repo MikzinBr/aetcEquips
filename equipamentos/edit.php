@@ -47,38 +47,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $sala_id    = $_POST['sala_id'] ?: null;
   $cod_equip  = $_POST['codigo'];
 
-  /* ---- preço (euros → centavos) ---- */
-  $preco_input = trim($_POST['custo_unitario']);
-  $preco_input = str_replace(',', '.', $preco_input);
-
-  if (!is_numeric($preco_input)) {
-    $erro = "Preço inválido.";
-  } else {
-    $custo_centavos = (int) round(floatval($preco_input) * 100);
-
-    $stmt = $conn->prepare(
-      "UPDATE equipamentos
-             SET nome = ?, sala_id = ?, quantidade = ?, custo_unitario = ?, descricao = ?, status = ?, codigo = ?
+  $stmt = $conn->prepare(
+    "UPDATE equipamentos
+             SET nome = ?, sala_id = ?, quantidade = ?, custo_unitario = 0, descricao = ?, status = ?, codigo = ?
              WHERE id = ?"
-    );
+  );
 
-    $stmt->bind_param(
-      "siissssi",
-      $nome,
-      $sala_id,
-      $quantidade,
-      $custo_centavos,
-      $descricao,
-      $status,
-      $cod_equip,
-      $id
-    );
+  $stmt->bind_param(
+    "siisssi",
+    $nome,
+    $sala_id,
+    $quantidade,
+    $descricao,
+    $status,
+    $cod_equip,
+    $id
+  );
 
-    $stmt->execute();
+  $stmt->execute();
 
-    header("Location: index.php?msg=Equipamento editado com sucesso");
-    exit;
-  }
+  header("Location: index.php?msg=Equipamento editado com sucesso");
+  exit;
 }
 ?>
 <div class="container mt-4">
@@ -114,13 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label>Quantidade</label>
       <input type="number" name="quantidade" class="form-control"
         min="1" value="<?= $equipamento['quantidade'] ?>">
-    </div>
-
-    <div class="mb-3">
-      <label>Custo Unitário (€)</label>
-      <input type="text" name="custo_unitario" class="form-control"
-        value="<?= number_format($equipamento['custo_unitario'] / 100, 2, ',', '.') ?>"
-        placeholder="Ex: 1,23" required>
     </div>
 
     <div class="mb-3">

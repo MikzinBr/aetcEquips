@@ -80,7 +80,6 @@ $result = $stmt->get_result();
         <th>Nome</th>
         <th>Sala</th>
         <th>Qtd</th>
-        <th>Custo Unitário</th>
         <th>Status</th>
         <th>Ações</th>
       </tr>
@@ -91,7 +90,6 @@ $result = $stmt->get_result();
           <td><?= htmlspecialchars($e['nome']) ?></td>
           <td><?= $e['numero_sala'] ?? '—' ?></td>
           <td><?= $e['quantidade'] ?></td>
-          <td><?= format_euro($e['custo_unitario']) ?></td>
           <td>
             <span class="badge bg-<?= $e['status'] == 'ok' ? 'success' : 'danger' ?>">
               <?= $e['status'] ?>
@@ -99,12 +97,12 @@ $result = $stmt->get_result();
           </td>
           <td>
             <a href="edit.php?id=<?= $e['id'] ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Editar</a>
+            <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="btn btn-sm btn-warning"><i class="fas fa-exclamation"></i> Reportar avaria</a>
             <a href="delete.php?id=<?= $e['id'] ?>"
               class="btn btn-sm btn-danger"
               onclick="return confirm('Remover equipamento?')">
               <i class="fas fa-trash"></i> Remover
             </a>
-            <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="btn btn-sm btn-warning"><i class="fas fa-exclamation"></i> Reportar avaria</a>
           </td>
         </tr>
       <?php endwhile; ?>
