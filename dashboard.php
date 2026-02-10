@@ -52,8 +52,8 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
             Visualizar histórico de avarias.
           </p>
           <div class="row d-flex justify-content-center px-2">
-            <a href="<?php echo BASEURL ?>avarias" class="btn btn-primary rounded-end-0 col">Acessar</a>
-            <a href="<?php echo BASEURL ?>avarias/reportar.php" class="btn btn-warning rounded-start-0 col">Reportar</a>
+            <a href="<?php echo BASEURL ?>avarias" class="btn btn-primary rounded-end-0 mx-1 col">Acessar</a>
+            <a href="<?php echo BASEURL ?>avarias/reportar.php" class="btn btn-warning rounded-start-0 mx-1 col">Reportar</a>
           </div>
         </div>
       </div>

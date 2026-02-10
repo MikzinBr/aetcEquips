@@ -76,7 +76,7 @@ $result = $conn->query($sql);
           <td><?= htmlspecialchars($a['usuario']) ?></td>
           <td><?= $a['data_registro'] ?></td>
           <td>
-            <label href="resolver.php?id=<?= $a["id"] ?>" class="p-1 text-light rounded bg-<?= $a['resolvido'] ? 'success' : 'danger' ?>"><?= $a['resolvido'] ? 'Resolvido' : 'Pendente' ?></label>
+            <label href="resolver.php?id=<?= $a["id"] ?>" class="p-1 m-0 text-light rounded bg-<?= $a['resolvido'] ? 'success' : 'danger' ?>"><?= $a['resolvido'] ? 'Resolvido' : 'Pendente' ?></label>
 
             <?php if ($_SESSION['usuario_tipo'] == "Professor") : ?>
               <a href="#" class="btn text-tertiary"><span class="far fa-<?= $a['resolvido'] ? 'check-square' : 'square' ?>" </span></a>

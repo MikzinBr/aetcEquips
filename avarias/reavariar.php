@@ -25,21 +25,23 @@ $conn = open_database();
 $stmt = $conn->prepare("UPDATE avarias SET resolvido = 0 WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
+$stmt->close();
 
 $stmt = $conn->prepare("
   UPDATE equipamentos e
-  SET status = 'avariado'
-  WHERE e.id = (
-    SELECT equipamento_id FROM avarias WHERE id = ?
-  )
-  AND NOT EXISTS (
-    SELECT 1 FROM avarias
-    WHERE equipamento_id = e.id AND resolvido = 0
-  )
+  JOIN avarias a_target ON a_target.equipamento_id = e.id
+  SET e.status = 'avariado'
+  WHERE a_target.id = ?
+    AND EXISTS (
+      SELECT 1
+      FROM avarias a_open
+      WHERE a_open.equipamento_id = e.id
+        AND a_open.resolvido = 0
+    )
 ");
-
 $stmt->bind_param("i", $id);
 $stmt->execute();
+$stmt->close();
 
 header("Location: index.php?msg=Avaria refeita");
 exit;

@@ -36,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("iis", $equipamento_id, $usuario_id, $descricao);
     $stmt->execute();
 
-    $stmt = $conn->prepare("UPDATE equipamentos SET status = 'avariado' WHERE id = ?");
-    $stmt->bind_param("i", $equipamento_id);
-    $stmt->execute();
+    $stmt2 = $conn->prepare("UPDATE equipamentos SET status = 'avariado' WHERE id = ?");
+    $stmt2->bind_param("i", $equipamento_id);
+    $stmt2->execute();
 
     header("Location: index.php?msg=Avaria reportada com sucesso");
     exit;
