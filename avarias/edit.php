@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <textarea name="descricao" class="form-control"><?= htmlspecialchars($avaria['descricao']) ?></textarea>
     </div>
 
-    <button type="submit" class="btn btn-success">Salvar</button>
+    <button type="submit" class="btn btn-success" onclick="return confirm('Deseja realmente salvar as alterações?')">Salvar</button>
     <a href="index.php" class="btn btn-danger">cancelar</a>
   </form>
 

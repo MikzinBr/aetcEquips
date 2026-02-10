@@ -63,12 +63,12 @@ $result = $conn->query("SELECT * FROM salas ORDER BY numero_sala");
               <i class="fas fa-eye"></i> Equipamentos
             </a>
             <a href="edit.php?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-warning">
-              <i class="fas fa-edit"></i> Editar
+              <i class="fas fa-edit"></i>
             </a>
             <a href="delete.php?id=<?= $sala['id'] ?>"
               class="btn btn-sm btn-danger"
               onclick="return confirm('Remover esta sala?')">
-              <i class="fas fa-trash"></i> Remover
+              <i class="fas fa-trash"></i>
             </a>
           </td>
         </tr>

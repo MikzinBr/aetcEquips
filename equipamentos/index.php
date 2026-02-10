@@ -60,7 +60,7 @@ $result = $stmt->get_result();
 
         <div class="col text-end">
           <a href="index.php?sala_id=<?= $sala_id ?>" class="col col-2 col-lg-1 btn btn-primary"><i class="fas fa-sync-alt"></i></a>
-          <a href="add.php?sala_id=<?= $sala_id ?>" class="col col-2 col-lg-4 btn btn-success "><i class="fas fa-plus"></i><span class="d-none d-xl-inline"> Novo equipamento</span></a>
+          <a href="add.php?sala_id=<?= $sala_id ?>" class="col col-2 col-lg-4 btn btn-success "><i class="fas fa-plus"></i><span class="d-none d-lg-inline"> Novo equipamento</span></a>
         </div>
 
       <?php else : ?>
@@ -87,22 +87,18 @@ $result = $stmt->get_result();
     <tbody>
       <?php while ($e = $result->fetch_assoc()): ?>
         <tr>
-          <td><?= htmlspecialchars($e['nome']) ?></td>
+          <td><?= limitText(htmlspecialchars($e['nome']), 20) ?></td>
           <td><?= $e['numero_sala'] ?? '—' ?></td>
           <td><?= $e['quantidade'] ?></td>
           <td>
-            <span class="badge bg-<?= $e['status'] == 'ok' ? 'success' : 'danger' ?>">
+            <span class="badge fs-6 m-0 bg-<?= $e['status'] == 'ok' ? 'success' : 'danger' ?>">
               <?= $e['status'] ?>
             </span>
           </td>
           <td>
-            <a href="edit.php?id=<?= $e['id'] ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Editar</a>
-            <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="btn btn-sm btn-warning"><i class="fas fa-exclamation"></i> Reportar avaria</a>
-            <a href="delete.php?id=<?= $e['id'] ?>"
-              class="btn btn-sm btn-danger"
-              onclick="return confirm('Remover equipamento?')">
-              <i class="fas fa-trash"></i> Remover
-            </a>
+            <a href="edit.php?id=<?= $e['id'] ?>" class="col col-xl-2 btn btn-primary"><i class="fa fa-edit"></i></a>
+            <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="col col-xl-2 btn btn-warning"><i class="fas fa-exclamation-triangle"></i></a>
+            <a href="delete.php?id=<?= $e['id'] ?>" class="col col-xl-2 btn btn-danger" onclick="return confirm('Deseja realmente remover o equipamento?')"><i class="fa fa-trash"></i></a>
           </td>
         </tr>
       <?php endwhile; ?>
