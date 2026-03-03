@@ -86,7 +86,7 @@ $result = $conn->query($sql);
 
           </td>
           <td>
-            <a href="detalhes.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-primary"><i class="fa fa-info"></i></a>
+            <a href="detalhes.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-info"><i class="fa fa-info"></i></a>
             <a href="edit.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-<?= $_SESSION['usuario_tipo'] == "Direção" || $a['usuario_id'] == $_SESSION["usuario_id"] ? "warning" : "secondary disabled" ?>"><i class="fa fa-edit"></i></a>
             <a href="delete.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-<?= $_SESSION['usuario_tipo'] == "Direção" || $a['usuario_id'] == $_SESSION["usuario_id"] ? "danger" : "secondary disabled" ?>" onclick="return confirm('Deseja realmente remover esta avaria?')"><i class="fa fa-trash"></i></a>
           </td>

@@ -57,16 +57,15 @@ $result = $conn->query("SELECT * FROM salas ORDER BY numero_sala");
           <td><?= htmlspecialchars(limitText($sala['descricao'], 30)) ?></td>
           <td>
             <a href="add_equipamentos.php?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-success">
-              <i class="fas fa-plus"></i> Adicionar equipamentos
+              <i class="fas fa-plus"></i> Equipamentos
             </a>
-            <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-primary">
-              <i class="fas fa-eye"></i> Equipamentos
-            </a>
-            <a href="edit.php?sala_id=<?= $sala['id'] ?>" class="btn btn-sm btn-warning">
+            <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" class="btn col col-1 btn-sm btn-info">
+              <i class="fas fa-desktop"></i></a>
+            <a href="edit.php?sala_id=<?= $sala['id'] ?>" class="btn col col-1 btn-sm btn-primary">
               <i class="fas fa-edit"></i>
             </a>
             <a href="delete.php?id=<?= $sala['id'] ?>"
-              class="btn btn-sm btn-danger"
+              class="btn col col-1 btn-sm btn-danger"
               onclick="return confirm('Remover esta sala?')">
               <i class="fas fa-trash"></i>
             </a>
