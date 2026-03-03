@@ -9,7 +9,7 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 if ($_SESSION['usuario_tipo'] != 'Direção') {
-  header('Location: index.php?erro=Você não tem permissão para remover uma sala');
+  header('Location: index.php?erro=Você não tem permissão para remover um usuario');
   exit;
 }
 
@@ -18,16 +18,16 @@ if (!isset($_GET['id'])) {
   exit;
 }
 
-$id_sala = intval($_GET['id']);
+$id_usuario = intval($_GET['id']);
 
 $conn = open_database();
 
 $stmt = $conn->prepare(
-  "DELETE FROM salas WHERE id = ?"
+  "DELETE FROM usuarios WHERE id = ?"
 );
 
-$stmt->bind_param("i", $id_sala);
+$stmt->bind_param("i", $id_usuario);
 $stmt->execute();
 
-header("Location: index.php?msg=Sala removida com sucesso");
+header("Location: index.php?msg=Usuario removido com sucesso");
 exit;

@@ -31,6 +31,11 @@ $tipo = $_SESSION['usuario_tipo'];
         <li class="nav-item">
           <a class="nav-link" href="<?php echo BASEURL; ?>avarias">Avarias</a>
         </li>
+        <?php if ($tipo == "Direção") : ?>
+          <li class="nav-item">
+            <a class="nav-link" href="<?php echo BASEURL; ?>usuarios">Usuarios</a>
+          </li>
+        <?php endif; ?>
       </ul>
 
       <!-- Right side (moves into collapse on small screens) -->

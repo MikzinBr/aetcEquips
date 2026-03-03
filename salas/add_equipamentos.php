@@ -5,7 +5,7 @@ require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
 if (!isset($_SESSION['usuario_id'])) {
-  header("Location: ../login.php");
+  header("Location: ../index.php");
   exit;
 }
 

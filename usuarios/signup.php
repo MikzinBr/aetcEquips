@@ -1,12 +1,13 @@
 <?php
-require_once 'config.php';
+require_once '../config.php';
 require_once HEADER_TEMPLATE;
 
 $erro = $_GET['erro'] ?? '';
 ?>
 
 <style>
-  html, body {
+  html,
+  body {
     height: 100%;
     margin: 0;
   }
@@ -15,10 +16,8 @@ $erro = $_GET['erro'] ?? '';
     overflow: hidden;
 
     background-image:
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
+      linear-gradient(rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)),
       url('<?php echo BASEURL; ?>images/aetc.jpg');
 
     background-size: cover;
@@ -32,12 +31,12 @@ $erro = $_GET['erro'] ?? '';
     <h4 class="text-center mb-3">Criar Conta</h4>
 
     <?php if ($erro): ?>
-        <div class="alert alert-danger">
-            <?= htmlspecialchars($erro) ?>
-        </div>
+      <div class="alert alert-danger">
+        <?= htmlspecialchars($erro) ?>
+      </div>
     <?php endif; ?>
 
-    <form action="process_signup.php" method="POST">
+    <form action="process_signup.php" method="POST" onsubmit="return confirmarUsuario()">
       <div class="mb-2">
         <label>Nome</label>
         <input type="text" name="nome" class="form-control" required>
@@ -69,15 +68,32 @@ $erro = $_GET['erro'] ?? '';
       </div>
 
       <button type="submit" class="btn btn-primary w-100">
-        Cadastrar
+        Criar usuário
       </button>
     </form>
-
-    <div class="text-center mt-3">
-      <a href="login.php">Já tenho conta</a>
-    </div>
   </div>
 </div>
 
+<script>
+  function confirmarUsuario() {
+    let senha = prompt("Digite sua senha para confirmar esta ação:");
+
+    if (!senha) {
+      alert("Ação cancelada.");
+      return false;
+    }
+
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "senha_confirmacao";
+    input.value = senha;
+
+    document.querySelector("form").appendChild(input);
+
+    return true;
+  }
+</script>
+
 </body>
+
 </html>
