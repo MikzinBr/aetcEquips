@@ -1,6 +1,10 @@
 <?php
 require_once '../config.php';
 require_once DBAPI;
+
+$page_title = 'Novo Equipamento';
+$page_subtitle = 'Adicionar equipamento ao inventário';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
@@ -84,9 +88,10 @@ if (!empty($_GET['sala_id'])) {
 }
 ?>
 
-<div class="container mt-4">
-
-  <h3>Novo Equipamento</h3>
+<div class="container-fluid px-0">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="h5 mb-3">Novo Equipamento</div>
 
   <?php if (!empty($_GET['erro'])): ?>
     <div class="alert alert-danger">
@@ -94,7 +99,7 @@ if (!empty($_GET['sala_id'])) {
     </div>
   <?php endif; ?>
 
-  <form method="POST">
+      <form method="POST">
 
     <div class="mb-3">
       <label>Nome</label>
@@ -130,13 +135,17 @@ if (!empty($_GET['sala_id'])) {
       <textarea name="descricao" class="form-control"></textarea>
     </div>
 
-    <button class="btn btn-success">Salvar</button>
-    <a href="index.php" class="btn btn-danger">Cancelar</a>
+        <div class="d-flex gap-2">
+          <button class="btn btn-success">
+            <i class="fas fa-save me-1"></i>
+            Salvar
+          </button>
+          <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
 
-  </form>
-
+      </form>
+    </div>
+  </div>
 </div>
 
-</body>
-
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

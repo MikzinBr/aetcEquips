@@ -2,6 +2,10 @@
 require_once '../config.php';
 require_once '../inc/helpers.php';
 require_once DBAPI;
+
+$page_title = 'Equipamentos';
+$page_subtitle = 'Inventário de equipamentos';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
@@ -39,7 +43,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
-<div class="container mt-4">
+<div class="container-fluid px-0">
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger">
@@ -53,60 +57,89 @@ $result = $stmt->get_result();
     </div>
   <?php endif; ?>
 
-  <div class="container mb-3">
-    <div class="row justify-content-between">
+  <div class="d-flex align-items-center justify-content-between mb-3">
       <?php if (isset($sala_id)) : ?>
-        <h3 class="col">Equipamentos <?= $sala_num["numero_sala"] ?></h3>
-
-        <div class="col text-end">
-          <a href="index.php?sala_id=<?= $sala_id ?>" class="col col-2 col-lg-1 btn btn-primary"><i class="fas fa-sync-alt"></i></a>
-          <a href="add.php?sala_id=<?= $sala_id ?>" class="col col-2 col-lg-4 btn btn-success "><i class="fas fa-plus"></i><span class="d-none d-lg-inline"> Novo equipamento</span></a>
+        <div class="h5 mb-0">Equipamentos <?= htmlspecialchars($sala_num["numero_sala"]) ?></div>
+        <div class="d-flex gap-2">
+          <a href="index.php?sala_id=<?= $sala_id ?>" class="btn btn-outline-secondary btn-sm" title="Atualizar">
+            <i class="fas fa-sync-alt"></i>
+          </a>
+          <a href="add.php?sala_id=<?= $sala_id ?>" class="btn btn-success btn-sm">
+            <i class="fas fa-plus me-1"></i>
+            Novo equipamento
+          </a>
         </div>
-
       <?php else : ?>
-        <h3 class="col">Equipamentos</h3>
-
-        <div class="col text-end">
-          <a href="index.php" class="col col-2 col-lg-1 btn btn-primary"><i class="fas fa-sync-alt"></i></a>
-          <a href="add.php" class="col col-2 col-lg-4 btn btn-success "><i class="fas fa-plus"></i><span class="d-none d-xl-inline"> Novo equipamento</span></a>
+        <div class="h5 mb-0">Equipamentos</div>
+        <div class="d-flex gap-2">
+          <a href="index.php" class="btn btn-outline-secondary btn-sm" title="Atualizar">
+            <i class="fas fa-sync-alt"></i>
+          </a>
+          <a href="add.php" class="btn btn-success btn-sm">
+            <i class="fas fa-plus me-1"></i>
+            Novo equipamento
+          </a>
         </div>
       <?php endif; ?>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex align-items-center gap-2 mb-3" style="max-width: 360px;">
+        <span class="text-muted"><i class="fas fa-search"></i></span>
+        <input type="text" class="form-control form-control-sm" placeholder="Pesquisar equipamentos..." data-table-filter="equipTable">
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="equipTable">
+          <thead class="table-light">
+            <tr>
+              <th>Nome</th>
+              <th>Nº Série</th>
+              <th>Categoria</th>
+              <th>Localização</th>
+              <th>Estado</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while ($e = $result->fetch_assoc()): ?>
+              <tr>
+                <td class="fw-semibold"><?= limitText(htmlspecialchars($e['nome']), 28) ?></td>
+                <td><?= htmlspecialchars($e['codigo'] ?? '—') ?></td>
+                <td><?= limitText(htmlspecialchars($e['descricao'] ?? '—'), 24) ?></td>
+                <td><?= htmlspecialchars($e['numero_sala'] ? ('sala ' . $e['numero_sala']) : '—') ?></td>
+                <td>
+                  <?php
+                  $status = strtolower($e['status'] ?? '');
+                  $badge = ($status === 'ok' || $status === 'ativo') ? 'success' : 'danger';
+                  $label = $status ? ucfirst($status) : '—';
+                  ?>
+                  <span class="badge rounded-pill bg-<?= $badge ?>-subtle text-<?= $badge ?> border border-<?= $badge ?>-subtle">
+                    <?= htmlspecialchars($label) ?>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="btn-group" role="group" aria-label="Ações">
+                    <a href="edit.php?id=<?= $e['id'] ?>" class="btn btn-outline-secondary btn-sm" title="Editar">
+                      <i class="fas fa-pen"></i>
+                    </a>
+                    <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="btn btn-outline-warning btn-sm" title="Reportar avaria">
+                      <i class="fas fa-exclamation-triangle"></i>
+                    </a>
+                    <a href="delete.php?id=<?= $e['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Deseja realmente remover o equipamento?')">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Nome</th>
-        <th>Sala</th>
-        <th>Qtd</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php while ($e = $result->fetch_assoc()): ?>
-        <tr>
-          <td><?= limitText(htmlspecialchars($e['nome']), 20) ?></td>
-          <td><?= $e['numero_sala'] ?? '—' ?></td>
-          <td><?= $e['quantidade'] ?></td>
-          <td>
-            <span class="badge fs-6 m-0 bg-<?= $e['status'] == 'ok' ? 'success' : 'danger' ?>">
-              <?= $e['status'] ?>
-            </span>
-          </td>
-          <td>
-            <a href="edit.php?id=<?= $e['id'] ?>" class="col col-xl-2 btn btn-primary"><i class="fa fa-edit"></i></a>
-            <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="col col-xl-2 btn btn-warning"><i class="fas fa-exclamation-triangle"></i></a>
-            <a href="delete.php?id=<?= $e['id'] ?>" class="col col-xl-2 btn btn-danger" onclick="return confirm('Deseja realmente remover o equipamento?')"><i class="fa fa-trash"></i></a>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
-
 </div>
 
-</body>
-
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

@@ -1,6 +1,10 @@
 <?php
 require_once '../config.php';
 require_once DBAPI;
+
+$page_title = 'Criar Sala';
+$page_subtitle = 'Adicionar nova sala';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
@@ -108,6 +112,4 @@ $equipamentos = $conn->query("
 
 </div>
 
-</body>
-
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>
