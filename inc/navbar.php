@@ -76,7 +76,12 @@ $section_subtitle = $page_subtitle ?? (
       <?php endif; ?>
     </nav>
 
-    <div class="mt-auto pt-3 border-top border-secondary">
+    <div class="mt-auto pt-3">
+      <div class="d-flex align-items-center gap-2 border-bottom border-secondary mb-2">
+        <span class="text-light medium d-none d-md-inline">
+          <?= htmlspecialchars($nome) ?><?= $tipo ? ' (' . htmlspecialchars($tipo) . ')' : '' ?>
+        </span>
+      </div>
       <a href="<?= BASEURL ?>logout.php" class="btn btn-outline-danger w-100 btn-sm">
         <i class="fas fa-sign-out-alt me-2"></i>
         Sair
@@ -92,12 +97,6 @@ $section_subtitle = $page_subtitle ?? (
           <div class="text-muted small">Gestão de Equipamentos</div>
           <div class="h5 mb-0"><?= htmlspecialchars($section_title) ?></div>
           <div class="text-muted small"><?= htmlspecialchars($section_subtitle) ?></div>
-        </div>
-
-        <div class="d-flex align-items-center gap-2">
-          <span class="text-muted small d-none d-md-inline">
-            <?= htmlspecialchars($nome) ?><?= $tipo ? ' (' . htmlspecialchars($tipo) . ')' : '' ?>
-          </span>
         </div>
       </div>
     </header>
