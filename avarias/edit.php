@@ -1,6 +1,10 @@
 <?php
 require_once '../config.php';
 require_once '../inc/helpers.php';
+
+$page_title = 'Editar Avaria';
+$page_subtitle = 'Atualizar informações da avaria';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 require_once DBAPI;
@@ -86,6 +90,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </form>
 
 </div>
-</body>
 
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

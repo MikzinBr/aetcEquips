@@ -1,6 +1,11 @@
 <?php
 require_once '../config.php';
+require_once '../inc/helpers.php';
 require_once DBAPI;
+
+$page_title = 'Usuários';
+$page_subtitle = 'Gestão de contas';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
@@ -9,24 +14,21 @@ if (!isset($_SESSION['usuario_id'])) {
   exit;
 }
 
-if ($_SESSION['usuario_tipo'] != "Direção") {
-  header("Location: ../index.php");
+if (($_SESSION['usuario_tipo'] ?? '') !== 'Direção') {
+  header("Location: ../dashboard.php");
   exit;
 }
 
-$erro = $_GET["erro"] ?? "";
-$msg = $_GET["msg"] ?? "";
+$erro = $_GET['erro'] ?? '';
+$msg  = $_GET['msg'] ?? '';
 
 $conn = open_database();
-
-$sql = "SELECT * FROM usuarios";
-
-$stmt = $conn->prepare($sql);
+$stmt = $conn->prepare("SELECT id, nome, email, tipo FROM usuarios ORDER BY id DESC");
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
-<div class="container mt-4">
+<div class="container-fluid px-0">
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger">
@@ -40,43 +42,72 @@ $result = $stmt->get_result();
     </div>
   <?php endif; ?>
 
-  <div class="container mb-3">
-    <div class="row justify-content-between">
-      <h3 class="col">Usuarios</h3>
-
-      <div class="col text-end">
-        <a href="index.php" class="col col-2 col-lg-1 btn btn-primary"><i class="fas fa-sync-alt"></i></a>
-        <a href="signup.php" class="col col-2 col-lg-4 btn btn-success "><i class="fas fa-plus"></i><span class="d-none d-xl-inline"> Novo usuario</span></a>
-      </div>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="h5 mb-0">Usuários</div>
+    <div class="d-flex gap-2">
+      <a href="index.php" class="btn btn-outline-secondary btn-sm" title="Atualizar">
+        <i class="fas fa-sync-alt"></i>
+      </a>
+      <a href="signup.php" class="btn btn-success btn-sm">
+        <i class="fas fa-plus me-1"></i>
+        Novo usuário
+      </a>
     </div>
   </div>
 
-  <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Cargo</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php while ($u = $result->fetch_assoc()): ?>
-        <tr>
-          <td><?= $u['nome'] ?></td>
-          <td><?= $u['email'] ?></td>
-          <td><?= $u['tipo'] ?></td>
-          <td>
-            <a href="edit.php?id=<?= $u['id'] ?>" class="col col-xl-2 btn btn-primary"><i class="fa fa-edit"></i></a>
-            <a href="delete.php?id=<?= $u['id'] ?>" class="col col-xl-2 btn btn-danger" onclick="return confirm('Deseja realmente remover o usuario?')"><i class="fa fa-trash"></i></a>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex align-items-center gap-2 mb-3" style="max-width: 360px;">
+        <span class="text-muted"><i class="fas fa-search"></i></span>
+        <input type="text" class="form-control form-control-sm" placeholder="Pesquisar usuários..." data-table-filter="usersTable">
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="usersTable">
+          <thead class="table-light">
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Cargo</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while ($u = $result->fetch_assoc()): ?>
+              <tr>
+                <td class="fw-semibold"><?= limitText(htmlspecialchars($u['nome']), 32) ?></td>
+                <td><?= limitText(htmlspecialchars($u['email']), 40) ?></td>
+                <td>
+                  <?php
+                  $tipo = (string)($u['tipo'] ?? '');
+                  $badge = ($tipo === 'Direção') ? 'primary' : (($tipo === 'Técnico') ? 'warning' : 'secondary');
+                  ?>
+                  <span class="badge rounded-pill bg-<?= $badge ?>-subtle text-<?= $badge ?> border border-<?= $badge ?>-subtle">
+                    <?= htmlspecialchars($tipo ?: '—') ?>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="btn-group" role="group" aria-label="Ações">
+                    <a href="edit.php?id=<?= (int)$u['id'] ?>" class="btn btn-outline-secondary btn-sm" title="Editar">
+                      <i class="fas fa-pen"></i>
+                    </a>
+                    <a href="delete.php?id=<?= (int)$u['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Deseja realmente remover o usuário?')">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
+
+      <?php if ($result->num_rows === 0): ?>
+        <div class="text-muted small mt-3">Nenhum usuário encontrado.</div>
+      <?php endif; ?>
+    </div>
+  </div>
 
 </div>
 
-</body>
-
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

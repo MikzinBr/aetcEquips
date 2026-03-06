@@ -1,6 +1,10 @@
 <?php
 require_once '../config.php';
 require_once DBAPI;
+
+$page_title = 'Adicionar Equipamentos';
+$page_subtitle = 'Vincular equipamentos a uma sala';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
@@ -84,6 +88,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </form>
 
 </div>
-</body>
 
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

@@ -1,7 +1,5 @@
 <?php
 require_once '../config.php';
-require_once HEADER_TEMPLATE;
-require_once NAVBAR_TEMPLATE;
 require_once DBAPI;
 
 if (!isset($_SESSION['usuario_id'])) {
