@@ -1,6 +1,7 @@
 <?php
 require_once '../config.php';
 require_once DBAPI;
+session_start();
 
 if (!isset($_SESSION['usuario_id'])) {
   header("Location: ../index.php");
