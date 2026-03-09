@@ -1,6 +1,16 @@
 <?php require_once 'config.php'; ?>
 <?php require_once HEADER_TEMPLATE ?>
 <?php $erro = $_GET['erro'] ?? ''; ?>
+<?php session_start(); ?>
+
+<?php
+
+if (isset($_SESSION['usuario_tipo'])) {
+  header("location: dashboard.php");
+  exit;
+}
+
+?>
 
 <style>
   html,
