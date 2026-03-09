@@ -42,8 +42,8 @@ $result = $stmt->get_result();
 $equipamento = $result->fetch_assoc();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $equipamento_id       = $_POST['equipamento_id'];
-  $descricao  = $_POST['descricao'];
+  $equipamento_id = $_POST['equipamento_id'];
+  $descricao      = $_POST['descricao'];
 }
 ?>
 <div class="container mt-4">
@@ -61,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 
   <a href="index.php" class="btn btn-success">Sair</a>
-  </form>
 
 </div>
 

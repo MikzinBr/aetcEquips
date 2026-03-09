@@ -113,19 +113,90 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($a['data_registro'] ?? '—') ?></td>
                 <td class="text-end">
                   <div class="btn-group" role="group" aria-label="Ações">
-                    <a href="detalhes.php?id=<?= $a['id'] ?>" class="btn btn-outline-info btn-sm" title="Detalhes">
+                    <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#detalhesAvaria-<?= $a['id'] ?>">
                       <i class="fas fa-info-circle"></i>
-                    </a>
-                    <a href="edit.php?id=<?= $a['id'] ?>" class="btn btn-outline-secondary btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" title="Editar">
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" data-bs-toggle="modal" data-bs-target="#editarAvaria-<?= $a['id'] ?>">
                       <i class="fas fa-pen"></i>
-                    </a>
+                    </button>
                     <a href="delete.php?id=<?= $a['id'] ?>" class="btn btn-outline-danger btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" title="Remover" onclick="return confirm('Deseja realmente remover esta avaria?')">
                       <i class="fas fa-trash"></i>
                     </a>
                   </div>
                 </td>
               </tr>
-            <?php endwhile; ?>
+
+              <!-- Modal edição de avaria -->
+              <?php
+
+              $equipamentos = $conn->query("SELECT id, nome FROM equipamentos");
+
+              ?>
+              <div class="modal fade" id="editarAvaria-<?= $a['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar avaria</h1>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST" class="mt-3" action="edit.php?id=<?= $a['id'] ?>">
+
+                        <div class="mb-3">
+                          <label>Equipamento</label>
+                          <select name="equipamento_id" class="form-select">
+                            <?php while ($e = $equipamentos->fetch_assoc()): ?>
+                              <option value="<?= $e['id'] ?>"
+                                <?= $a['equipamento_id'] == $e['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($e['nome']) ?>
+                              </option>
+                            <?php endwhile; ?>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Descrição</label>
+                          <textarea name="descricao" class="form-control" style="max-height: 50vh;"><?= htmlspecialchars($a['descricao']) ?></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success" onclick="return confirm('Deseja realmente salvar as alterações?')">Salvar</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal detalhes da avaria -->
+
+              <?php
+
+              $equipamento = $conn->query("SELECT id, nome FROM equipamentos WHERE id = " . $a['equipamento_id'])->fetch_assoc();
+
+              ?>
+
+              <div class="modal fade" id="detalhesAvaria-<?= $a['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalhes</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label>Equipamento</label>
+                        <input type="text" class="form-control" value="<?= $equipamento['nome'] ?>" disabled>
+                      </div>
+
+                      <div class="mb-3">
+                        <label>Descrição</label>
+                        <textarea name="descricao" class="form-control" disabled><?= htmlspecialchars($a['descricao']) ?></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <?php endwhile; ?>
           </tbody>
         </table>
       </div>
