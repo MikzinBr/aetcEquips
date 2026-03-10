@@ -1,14 +1,14 @@
 <?php
 require_once 'config.php';
+require_once './inc/database.php';
+require_once HEADER_TEMPLATE;
+require_once NAVBAR_TEMPLATE;
 
 $page_title = 'Bem-vindo ao AETC Equips';
 $page_subtitle = 'Selecione uma opção para continuar';
 
-require_once HEADER_TEMPLATE;
-require_once NAVBAR_TEMPLATE;
-
 if (!isset($_SESSION['usuario_id'])) {
-  header("Location: login.php");
+  header("Location: index.php");
   exit;
 }
 

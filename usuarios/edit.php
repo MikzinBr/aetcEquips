@@ -108,7 +108,7 @@ $erro = $_GET['erro'] ?? '';
                 <i class="fas fa-save me-1"></i>
                 Salvar
               </button>
-              <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
+              <a href="index.php" class="btn btn-danger">Cancelar</a>
             </div>
           </form>
         </div>

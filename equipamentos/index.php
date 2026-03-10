@@ -58,29 +58,29 @@ $result = $stmt->get_result();
   <?php endif; ?>
 
   <div class="d-flex align-items-center justify-content-between mb-3">
-      <?php if (isset($sala_id)) : ?>
-        <div class="h5 mb-0">Equipamentos <?= htmlspecialchars($sala_num["numero_sala"]) ?></div>
-        <div class="d-flex gap-2">
-          <a href="index.php?sala_id=<?= $sala_id ?>" class="btn btn-outline-secondary btn-sm" title="Atualizar">
-            <i class="fas fa-sync-alt"></i>
-          </a>
-          <a href="add.php?sala_id=<?= $sala_id ?>" class="btn btn-success btn-sm">
-            <i class="fas fa-plus me-1"></i>
-            Novo equipamento
-          </a>
-        </div>
-      <?php else : ?>
-        <div class="h5 mb-0">Equipamentos</div>
-        <div class="d-flex gap-2">
-          <a href="index.php" class="btn btn-outline-secondary btn-sm" title="Atualizar">
-            <i class="fas fa-sync-alt"></i>
-          </a>
-          <a href="add.php" class="btn btn-success btn-sm">
-            <i class="fas fa-plus me-1"></i>
-            Novo equipamento
-          </a>
-        </div>
-      <?php endif; ?>
+    <?php if (isset($sala_id)) : ?>
+      <div class="h5 mb-0">Equipamentos <?= htmlspecialchars($sala_num["numero_sala"]) ?></div>
+      <div class="d-flex gap-2">
+        <a href="index.php?sala_id=<?= $sala_id ?>" class="btn btn-outline-secondary btn-sm" title="Atualizar">
+          <i class="fas fa-sync-alt"></i>
+        </a>
+        <a href="add.php?sala_id=<?= $sala_id ?>" class="btn btn-success btn-sm">
+          <i class="fas fa-plus me-1"></i>
+          Novo equipamento
+        </a>
+      </div>
+    <?php else : ?>
+      <div class="h5 mb-0">Equipamentos</div>
+      <div class="d-flex gap-2">
+        <a href="index.php" class="btn btn-outline-secondary btn-sm" title="Atualizar">
+          <i class="fas fa-sync-alt"></i>
+        </a>
+        <a href="add.php" class="btn btn-success btn-sm">
+          <i class="fas fa-plus me-1"></i>
+          Novo equipamento
+        </a>
+      </div>
+    <?php endif; ?>
   </div>
 
   <div class="card border-0 shadow-sm">
@@ -121,9 +121,9 @@ $result = $stmt->get_result();
                 </td>
                 <td class="text-end">
                   <div class="btn-group" role="group" aria-label="Ações">
-                    <a href="edit.php?id=<?= $e['id'] ?>" class="btn btn-outline-secondary btn-sm" title="Editar">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editarEquipamento-<?= $e['id'] ?>">
                       <i class="fas fa-pen"></i>
-                    </a>
+                    </button>
                     <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="btn btn-outline-warning btn-sm" title="Reportar avaria">
                       <i class="fas fa-exclamation-triangle"></i>
                     </a>
@@ -133,6 +133,74 @@ $result = $stmt->get_result();
                   </div>
                 </td>
               </tr>
+
+              <?php
+
+              $salas = $conn->query("SELECT id, numero_sala FROM salas");
+
+              ?>
+
+              <!-- Modal editar equipamento -->
+              <div class="modal fade" id="editarEquipamento-<?= $e['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar equipamento</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST" class="mt-3" action="edit.php?id=<?= $e['id'] ?>">
+
+                        <div class="mb-3">
+                          <label>Nome</label>
+                          <input type="text" name="nome" class="form-control"
+                            value="<?= htmlspecialchars($e['nome']) ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Sala</label>
+                          <select name="sala_id" class="form-select">
+                            <option value="">Sem sala</option>
+                            <?php while ($s = $salas->fetch_assoc()): ?>
+                              <option value="<?= $s['id'] ?>"
+                                <?= $e['sala_id'] == $s['id'] ? 'selected' : '' ?>>
+                                Sala <?= htmlspecialchars($s['numero_sala']) ?>
+                              </option>
+                            <?php endwhile; ?>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Código</label>
+                          <input type="text" name="codigo" class="form-control"
+                            value="<?= $e['codigo'] ?>"
+                            required>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Status</label>
+                          <select name="status" class="form-select">
+                            <option value="ok" <?= $e['status'] == 'ok' ? 'selected' : '' ?>>OK</option>
+                            <option value="avariado" <?= $e['status'] == 'avariado' ? 'selected' : '' ?>>Avariado</option>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Descrição</label>
+                          <textarea name="descricao" class="form-control"><?= htmlspecialchars($e['descricao']) ?></textarea>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
+                      <button class="btn btn-success" onclick="return confirm('Deseja realmente salvar as alterações?')">Salvar Alterações</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
             <?php endwhile; ?>
           </tbody>
         </table>

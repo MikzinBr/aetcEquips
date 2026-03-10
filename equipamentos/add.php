@@ -93,54 +93,54 @@ if (!empty($_GET['sala_id'])) {
     <div class="card-body">
       <div class="h5 mb-3">Novo Equipamento</div>
 
-  <?php if (!empty($_GET['erro'])): ?>
-    <div class="alert alert-danger">
-      <?= htmlspecialchars($_GET['erro']) ?>
-    </div>
-  <?php endif; ?>
+      <?php if (!empty($_GET['erro'])): ?>
+        <div class="alert alert-danger">
+          <?= htmlspecialchars($_GET['erro']) ?>
+        </div>
+      <?php endif; ?>
 
       <form method="POST">
 
-    <div class="mb-3">
-      <label>Nome</label>
-      <input type="text" name="nome" class="form-control" required>
-    </div>
+        <div class="mb-3">
+          <label>Nome</label>
+          <input type="text" name="nome" class="form-control" required>
+        </div>
 
-    <div class="mb-3">
-      <label>Código</label>
-      <input type="text" name="codigo" class="form-control">
-    </div>
+        <div class="mb-3">
+          <label>Código</label>
+          <input type="text" name="codigo" class="form-control">
+        </div>
 
-    <div class="mb-3">
-      <label>Sala</label>
-      <select name="sala_id" class="form-select">
-        <?php if (empty($_GET['sala_id'])): ?>
-          <option value="">Sem sala</option>
-        <?php endif; ?>
-        <?php while ($s = $salas->fetch_assoc()): ?>
-          <option value="<?= $s['id'] ?>">
-            Sala <?= htmlspecialchars($s['numero_sala']) ?>
-          </option>
-        <?php endwhile; ?>
-      </select>
-    </div>
+        <div class="mb-3">
+          <label>Sala</label>
+          <select name="sala_id" class="form-select">
+            <?php if (empty($_GET['sala_id'])): ?>
+              <option value="">Sem sala</option>
+            <?php endif; ?>
+            <?php while ($s = $salas->fetch_assoc()): ?>
+              <option value="<?= $s['id'] ?>">
+                Sala <?= htmlspecialchars($s['numero_sala']) ?>
+              </option>
+            <?php endwhile; ?>
+          </select>
+        </div>
 
-    <div class="mb-3">
-      <label>Quantidade</label>
-      <input type="number" name="quantidade" class="form-control" value="1" min="1" required>
-    </div>
+        <div class="mb-3">
+          <label>Quantidade</label>
+          <input type="number" name="quantidade" class="form-control" value="1" min="1" required>
+        </div>
 
-    <div class="mb-3">
-      <label>Descrição</label>
-      <textarea name="descricao" class="form-control"></textarea>
-    </div>
+        <div class="mb-3">
+          <label>Descrição</label>
+          <textarea name="descricao" class="form-control"></textarea>
+        </div>
 
         <div class="d-flex gap-2">
           <button class="btn btn-success">
             <i class="fas fa-save me-1"></i>
             Salvar
           </button>
-          <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
+          <a href="index.php" class="btn btn-danger">Cancelar</a>
         </div>
 
       </form>

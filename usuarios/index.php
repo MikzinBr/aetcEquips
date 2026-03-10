@@ -91,7 +91,7 @@ $result = $stmt->get_result();
                     <a href="edit.php?id=<?= (int)$u['id'] ?>" class="btn btn-outline-secondary btn-sm" title="Editar">
                       <i class="fas fa-pen"></i>
                     </a>
-                    <a href="delete.php?id=<?= (int)$u['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Deseja realmente remover o usuário?')">
+                    <a href="delete.php?id=<?= (int)$u['id'] ?>" class="btn btn-outline-<?= $_SESSION['usuario_id'] == $u['id'] ? "secondary disabled" : "danger" ?> btn-sm" title="Remover" onclick="return confirm('Deseja realmente remover o usuário?')">
                       <i class="fas fa-trash"></i>
                     </a>
                   </div>
