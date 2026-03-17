@@ -19,15 +19,14 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 if (!$user) {
-  header("location: login.php?erro=Email não cadastrado.");
+  header("location: index.php?erro=Email não cadastrado.");
   exit;
 }
 
 if (!password_verify($senha, $user['senha'])) {
 
-  header("location: login.php?erro=Senha incorreta.");
+  header("location: index.php?erro=Senha incorreta.");
   exit;
-
 } else {
 
   $_SESSION['usuario_id']   = $user['id'];
@@ -37,3 +36,4 @@ if (!password_verify($senha, $user['senha'])) {
   header("Location: dashboard.php");
   exit;
 }
+

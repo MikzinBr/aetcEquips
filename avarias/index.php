@@ -113,15 +113,22 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($a['data_registro'] ?? '—') ?></td>
                 <td class="text-end">
                   <div class="btn-group" role="group" aria-label="Ações">
-                    <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#detalhesAvaria-<?= $a['id'] ?>">
+                    <button type="button" class="btn btn-outline-info btn-sm" title="detalhes" data-bs-toggle="modal" data-bs-target="#detalhesAvaria-<?= $a['id'] ?>">
                       <i class="fas fa-info-circle"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" data-bs-toggle="modal" data-bs-target="#editarAvaria-<?= $a['id'] ?>">
+                    <button type="button" class="btn btn-outline-secondary btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" data-bs-toggle="<?= ($_SESSION['usuario_tipo'] == "Direção" || $_SESSION['usuario_id'] == $a['usuario_id']) ? 'modal' : '' ?>" data-bs-target="#editarAvaria-<?= $a['id'] ?>">
                       <i class="fas fa-pen"></i>
                     </button>
-                    <a href="delete.php?id=<?= $a['id'] ?>" class="btn btn-outline-danger btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" title="Remover" onclick="return confirm('Deseja realmente remover esta avaria?')">
-                      <i class="fas fa-trash"></i>
-                    </a>
+                    <?php if ($_SESSION['usuario_tipo'] == "Direção" || $_SESSION['usuario_id'] == $a['usuario_id']) : ?>
+                      <a href="delete.php?id=<?= $a['id'] ?>" class="btn btn-outline-danger btn-sm <?= ($_session['usuario_tipo'] == 'direção' || $a['usuario_id'] == $_session['usuario_id']) ? '' : 'disabled' ?>" title="remover" onclick="return confirm('deseja realmente remover esta avaria?')">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    <?php else : ?>
+                      <button class="btn btn-outline-secondary btn-sm disabled">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    <?php endif; ?>
+
                   </div>
                 </td>
               </tr>
@@ -175,7 +182,7 @@ $result = $conn->query($sql);
 
               ?>
 
-              <div class="modal fade" id="detalhesAvaria-<?= $a['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal fade" id="detalhesAvaria-<?= $a['id'] ?>" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -190,7 +197,7 @@ $result = $conn->query($sql);
 
                       <div class="mb-3">
                         <label>Descrição</label>
-                        <textarea name="descricao" class="form-control" disabled><?= htmlspecialchars($a['descricao']) ?></textarea>
+                        <textarea name="descricao" class="form-control" style="max-height: 50vh;" disabled><?= htmlspecialchars($a['descricao']) ?></textarea>
                       </div>
                     </div>
                   </div>

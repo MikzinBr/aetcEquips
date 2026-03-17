@@ -31,15 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $stmt = $conn->prepare(
     "UPDATE equipamentos
-             SET nome = ?, sala_id = ?, quantidade = ?, custo_unitario = 0, descricao = ?, status = ?, codigo = ?
+             SET nome = ?, sala_id = ?, quantidade = 1, custo_unitario = 0, descricao = ?, status = ?, codigo = ?
              WHERE id = ?"
   );
 
   $stmt->bind_param(
-    "siisssi",
+    "sisssi",
     $nome,
     $sala_id,
-    1,
     $descricao,
     $status,
     $cod_equip,

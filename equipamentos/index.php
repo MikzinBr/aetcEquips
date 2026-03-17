@@ -121,15 +121,21 @@ $result = $stmt->get_result();
                 </td>
                 <td class="text-end">
                   <div class="btn-group" role="group" aria-label="Ações">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editarEquipamento-<?= $e['id'] ?>">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="<?= $_SESSION['usuario_tipo'] == "Direção" ? "modal" : "" ?>" data-bs-target="#editarEquipamento-<?= $e['id'] ?>">
                       <i class="fas fa-pen"></i>
                     </button>
-                    <a href="../avarias/reportar.php?id=<?= $e['id'] ?>" class="btn btn-outline-warning btn-sm" title="Reportar avaria">
+                    <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="<?= $_SESSION['usuario_tipo'] == "Direção" ? "modal" : "" ?>" data-bs-target="#reportarAvaria<?= $e['id'] ?>">
                       <i class="fas fa-exclamation-triangle"></i>
-                    </a>
-                    <a href="delete.php?id=<?= $e['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Deseja realmente remover o equipamento?')">
-                      <i class="fas fa-trash"></i>
-                    </a>
+                    </button>
+                    <?php if ($_SESSION['usuario_tipo'] == "Direção") : ?>
+                      <a href="delete.php?id=<?= $e['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Deseja realmente remover o equipamento?')">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    <?php else : ?>
+                      <button class="btn btn-outline-secondary btn-sm disabled">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    <?php endif; ?>
                   </div>
                 </td>
               </tr>
@@ -142,7 +148,7 @@ $result = $stmt->get_result();
 
               <!-- Modal editar equipamento -->
               <div class="modal fade" id="editarEquipamento-<?= $e['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar equipamento</h1>
@@ -187,7 +193,7 @@ $result = $stmt->get_result();
 
                         <div class="mb-3">
                           <label>Descrição</label>
-                          <textarea name="descricao" class="form-control"><?= htmlspecialchars($e['descricao']) ?></textarea>
+                          <textarea name="descricao" class="form-control" style="max-height: 20vh"><?= htmlspecialchars($e['descricao']) ?></textarea>
                         </div>
 
 
@@ -195,6 +201,42 @@ $result = $stmt->get_result();
                     <div class="modal-footer">
                       <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
                       <button class="btn btn-success" onclick="return confirm('Deseja realmente salvar as alterações?')">Salvar Alterações</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal reportar avaria -->
+              <div class="modal fade" id="reportarAvaria<?= $e['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Reportar avaria</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST" action="../avarias/reportar.php">
+
+                        <div class="mb-3">
+                          <label>Equipamento</label>
+                          <select name="equipamento_id" class="form-select" required>
+                            <option value="<?= $e['id'] ?>">
+                              <?= htmlspecialchars($e['nome']) ?>
+                            </option>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Descrição do Problema</label>
+                          <textarea name="descricao" class="form-control" style="max-height: 50vh;" required></textarea>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-warning">Reportar</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
                     </div>
                     </form>
                   </div>

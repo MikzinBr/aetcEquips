@@ -15,13 +15,7 @@ if (!isset($_SESSION['usuario_id'])) {
 
 $conn = open_database();
 
-$id_equip = $_GET["id"] ?? "";
-
-if ($id_equip) {
-  $equipamentos = $conn->query("SELECT id, nome FROM equipamentos WHERE id = " . $id_equip);
-} else {
-  $equipamentos = $conn->query("SELECT id, nome FROM equipamentos ORDER BY nome");
-}
+$equipamentos = $conn->query("SELECT id, nome FROM equipamentos ORDER BY nome");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
