@@ -19,7 +19,7 @@ if (isset($_SESSION['usuario_id'])) {
     margin: 0;
   }
 
-  body.index-login-signup {
+  body.login-page {
     overflow: hidden;
 
     background-image:
