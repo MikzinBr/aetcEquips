@@ -19,7 +19,11 @@ if (!defined('ABSPATH')) {
 
 /** caminho no server para o sistema **/
 if (!defined('BASEURL')) {
-  define('BASEURL', '/aetcEquips/');
+  // Define o BASEURL automaticamente com base na pasta do projeto.
+  // Ex.: http://localhost/aetcEquips-master/
+  // Se você colocar o projeto diretamente na raiz do servidor, o BASEURL vira '/'.
+  $projectFolder = basename(__DIR__);
+  define('BASEURL', ($projectFolder ? '/' . $projectFolder . '/' : '/'));
 }
 
 /** caminho do arquivo de base de dados **/
@@ -29,3 +33,4 @@ if (!defined('DBAPI')) {
 
 define('HEADER_TEMPLATE', ABSPATH . 'inc/header.php');
 define('NAVBAR_TEMPLATE', ABSPATH . 'inc/navbar.php');
+define('FOOTER_TEMPLATE', ABSPATH . 'inc/footer.php');

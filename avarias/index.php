@@ -1,6 +1,10 @@
 <?php
 require_once '../config.php';
 require_once DBAPI;
+
+$page_title = 'Avarias';
+$page_subtitle = 'Reportar e consultar avarias';
+
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
@@ -33,7 +37,7 @@ $sql .= " ORDER BY a.data_registro DESC";
 $result = $conn->query($sql);
 ?>
 
-<div class="container mt-4">
+<div class="container-fluid px-0">
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger">
@@ -47,55 +51,165 @@ $result = $conn->query($sql);
     </div>
   <?php endif; ?>
 
-  <div class="container mb-3">
-    <div class="row justify-content-between">
-      <h3 class="col">Avarias</h3>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="h5 mb-0">Avarias</div>
+    <div class="d-flex gap-2">
+      <a href="index.php" class="btn btn-outline-secondary btn-sm" title="Atualizar">
+        <i class="fas fa-sync-alt"></i>
+      </a>
+      <a href="reportar.php" class="btn btn-success btn-sm">
+        <i class="fas fa-plus me-1"></i>
+        Reportar Avaria
+      </a>
+    </div>
+  </div>
 
-      <div class="col text-end">
-        <a href="index.php" class="col col-2 col-lg-1 btn btn-primary"><i class="fas fa-sync-alt"></i></a>
-        <a href="reportar.php" class="col col-2 col-xl-4 btn btn-warning "><i class="fas fa-plus"></i><span class="d-none d-xl-inline"> Reportar avaria</span></a>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex align-items-center gap-2 mb-3" style="max-width: 360px;">
+        <span class="text-muted"><i class="fas fa-search"></i></span>
+        <input type="text" class="form-control form-control-sm" placeholder="Pesquisar avarias..." data-table-filter="avariasTable">
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="avariasTable">
+          <thead class="table-light">
+            <tr>
+              <th>Título</th>
+              <th>Equipamento</th>
+              <th>Severidade</th>
+              <th>Estado</th>
+              <th>Data</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <?php while ($a = $result->fetch_assoc()): ?>
+              <?php
+              $resolvida = (bool)($a['resolvido'] ?? 0);
+              $sev = strtolower($a['severidade'] ?? '');
+              $sevBadge = $sev === 'critica' || $sev === 'crítica' ? 'danger' : ($sev === 'media' || $sev === 'média' ? 'warning' : 'secondary');
+              ?>
+              <tr>
+                <td class="fw-semibold"><?= htmlspecialchars($a['titulo'] ?? '—') ?></td>
+                <td><?= htmlspecialchars($a['equipamento']) ?></td>
+                <td>
+                  <span class="badge rounded-pill bg-<?= $sevBadge ?>-subtle text-<?= $sevBadge ?> border border-<?= $sevBadge ?>-subtle">
+                    <?= htmlspecialchars($a['severidade'] ?? '—') ?>
+                  </span>
+                </td>
+                <td>
+                  <span class="badge rounded-pill bg-<?= $resolvida ? 'success' : 'danger' ?>-subtle text-<?= $resolvida ? 'success' : 'danger' ?> border border-<?= $resolvida ? 'success' : 'danger' ?>-subtle">
+                    <?= $resolvida ? 'Resolvida' : 'Pendente' ?>
+                  </span>
+
+                  <?php if ($_SESSION['usuario_tipo'] != 'Professor') : ?>
+                    <a href="<?= $resolvida ? 'reavariar' : 'resolver' ?>.php?id=<?= $a['id'] ?>" class="btn btn-link btn-sm px-2 text-<?= $resolvida ? 'success' : 'danger' ?>" title="Alterar estado">
+                      <i class="far fa-<?= $resolvida ? 'check-square' : 'square' ?>"></i>
+                    </a>
+                  <?php endif; ?>
+                </td>
+                <td><?= htmlspecialchars($a['data_registro'] ?? '—') ?></td>
+                <td class="text-end">
+                  <div class="btn-group" role="group" aria-label="Ações">
+                    <button type="button" class="btn btn-outline-info btn-sm" title="detalhes" data-bs-toggle="modal" data-bs-target="#detalhesAvaria-<?= $a['id'] ?>">
+                      <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm <?= ($_SESSION['usuario_tipo'] == 'Direção' || $a['usuario_id'] == $_SESSION['usuario_id']) ? '' : 'disabled' ?>" data-bs-toggle="<?= ($_SESSION['usuario_tipo'] == "Direção" || $_SESSION['usuario_id'] == $a['usuario_id']) ? 'modal' : '' ?>" data-bs-target="#editarAvaria-<?= $a['id'] ?>">
+                      <i class="fas fa-pen"></i>
+                    </button>
+                    <?php if ($_SESSION['usuario_tipo'] == "Direção" || $_SESSION['usuario_id'] == $a['usuario_id']) : ?>
+                      <a href="delete.php?id=<?= $a['id'] ?>" class="btn btn-outline-danger btn-sm <?= ($_session['usuario_tipo'] == 'direção' || $a['usuario_id'] == $_session['usuario_id']) ? '' : 'disabled' ?>" title="remover" onclick="return confirm('deseja realmente remover esta avaria?')">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    <?php else : ?>
+                      <button class="btn btn-outline-secondary btn-sm disabled">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    <?php endif; ?>
+
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Modal edição de avaria -->
+              <?php
+
+              $equipamentos = $conn->query("SELECT id, nome FROM equipamentos");
+
+              ?>
+              <div class="modal fade" id="editarAvaria-<?= $a['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar avaria</h1>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST" class="mt-3" action="edit.php?id=<?= $a['id'] ?>">
+
+                        <div class="mb-3">
+                          <label>Equipamento</label>
+                          <select name="equipamento_id" class="form-select">
+                            <?php while ($e = $equipamentos->fetch_assoc()): ?>
+                              <option value="<?= $e['id'] ?>"
+                                <?= $a['equipamento_id'] == $e['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($e['nome']) ?>
+                              </option>
+                            <?php endwhile; ?>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Descrição</label>
+                          <textarea name="descricao" class="form-control" style="max-height: 50vh;"><?= htmlspecialchars($a['descricao']) ?></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success" onclick="return confirm('Deseja realmente salvar as alterações?')">Salvar</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal detalhes da avaria -->
+
+              <?php
+
+              $equipamento = $conn->query("SELECT id, nome FROM equipamentos WHERE id = " . $a['equipamento_id'])->fetch_assoc();
+
+              ?>
+
+              <div class="modal fade" id="detalhesAvaria-<?= $a['id'] ?>" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalhes</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label>Equipamento</label>
+                        <input type="text" class="form-control" value="<?= $equipamento['nome'] ?>" disabled>
+                      </div>
+
+                      <div class="mb-3">
+                        <label>Descrição</label>
+                        <textarea name="descricao" class="form-control" style="max-height: 50vh;" disabled><?= htmlspecialchars($a['descricao']) ?></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <?php endwhile; ?>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th>Equipamento</th>
-        <th>Reportado por</th>
-        <th>Data</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-
-      <?php while ($a = $result->fetch_assoc()): ?>
-        <tr>
-          <td><?= htmlspecialchars($a['equipamento']) ?></td>
-          <td><?= htmlspecialchars($a['usuario']) ?></td>
-          <td><?= $a['data_registro'] ?></td>
-          <td>
-            <label href="resolver.php?id=<?= $a["id"] ?>" class="p-1 m-0 text-light rounded bg-<?= $a['resolvido'] ? 'success' : 'danger' ?>"><?= $a['resolvido'] ? 'Resolvido' : 'Pendente' ?></label>
-
-            <?php if ($_SESSION['usuario_tipo'] == "Professor") : ?>
-              <a href="#" class="btn text-tertiary"><span class="far fa-<?= $a['resolvido'] ? 'check-square' : 'square' ?>" </span></a>
-            <?php else : ?>
-              <a href="<?= $a['resolvido'] ? 'reavariar' : 'resolver' ?>.php?id=<?= $a['id'] ?>" class="btn text-<?= $a['resolvido'] ? 'success' : 'danger' ?>"><span class="far fa-<?= $a['resolvido'] ? 'check-square' : 'square' ?>" </span></a>
-            <?php endif; ?>
-
-          </td>
-          <td>
-            <a href="detalhes.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-info"><i class="fa fa-info"></i></a>
-            <a href="edit.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-<?= $_SESSION['usuario_tipo'] == "Direção" || $a['usuario_id'] == $_SESSION["usuario_id"] ? "warning" : "secondary disabled" ?>"><i class="fa fa-edit"></i></a>
-            <a href="delete.php?id=<?= $a['id'] ?>" class="col col-3 btn btn-<?= $_SESSION['usuario_tipo'] == "Direção" || $a['usuario_id'] == $_SESSION["usuario_id"] ? "danger" : "secondary disabled" ?>" onclick="return confirm('Deseja realmente remover esta avaria?')"><i class="fa fa-trash"></i></a>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
-
 </div>
-</body>
 
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

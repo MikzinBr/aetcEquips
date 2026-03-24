@@ -1,10 +1,14 @@
 <?php
 require_once 'config.php';
+require_once './inc/database.php';
 require_once HEADER_TEMPLATE;
 require_once NAVBAR_TEMPLATE;
 
+$page_title = 'Bem-vindo ao AETC Equips';
+$page_subtitle = 'Selecione uma opção para continuar';
+
 if (!isset($_SESSION['usuario_id'])) {
-  header("Location: login.php");
+  header("Location: index.php");
   exit;
 }
 
@@ -12,56 +16,54 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
 
 ?>
 
-<div class="container mt-4">
-
-  <div class="alert alert-success">
-    Bem-vindo ao sistema, <strong><?= htmlspecialchars($nome) ?></strong>!
-  </div>
-
-  <div class="row g-4">
-
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body">
-          <h5 class="card-title">Salas</h5>
-          <p class="card-text">
-            Gerenciar as salas da escola.
-          </p>
-          <a href="<?php echo BASEURL; ?>salas" class="btn btn-primary w-100">Acessar</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body">
-          <h5 class="card-title">Equipamentos</h5>
-          <p class="card-text">
-            Gerenciar os equipamentos.
-          </p>
-          <a href="<?php echo BASEURL; ?>equipamentos" class="btn btn-primary w-100">Acessar</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body">
-          <h5 class="card-title">Avarias</h5>
-          <p class="card-text">
-            Visualizar histórico de avarias.
-          </p>
-          <div class="row d-flex justify-content-center px-2">
-            <a href="<?php echo BASEURL ?>avarias" class="btn btn-primary rounded-end-0 mx-1 col">Acessar</a>
-            <a href="<?php echo BASEURL ?>avarias/reportar.php" class="btn btn-warning rounded-start-0 mx-1 col">Reportar</a>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <a href="<?php echo BASEURL; ?>equipamentos" class="text-decoration-none text-reset">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex gap-3 align-items-start">
+          <div class="p-3 rounded-3 bg-success-subtle text-success">
+            <i class="fas fa-tools"></i>
+          </div>
+          <div>
+            <div class="fw-semibold">Equipamentos</div>
+            <div class="text-muted small">Ver todos os equipamentos registados</div>
           </div>
         </div>
       </div>
-    </div>
+    </a>
+  </div>
 
+  <div class="col-lg-4">
+    <a href="<?php echo BASEURL; ?>avarias" class="text-decoration-none text-reset">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex gap-3 align-items-start">
+          <div class="p-3 rounded-3 bg-warning-subtle text-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div>
+            <div class="fw-semibold">Avarias</div>
+            <div class="text-muted small">Reportar e consultar avarias</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-lg-4">
+    <a href="<?php echo BASEURL; ?>salas" class="text-decoration-none text-reset">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex gap-3 align-items-start">
+          <div class="p-3 rounded-3 bg-info-subtle text-info">
+            <i class="fas fa-door-open"></i>
+          </div>
+          <div>
+            <div class="fw-semibold">Salas</div>
+            <div class="text-muted small">Ver salas e os seus equipamentos</div>
+          </div>
+        </div>
+      </div>
+    </a>
   </div>
 </div>
 
-</body>
-
-</html>
+<?php require_once FOOTER_TEMPLATE; ?>

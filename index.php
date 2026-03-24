@@ -5,7 +5,7 @@
 
 <?php
 
-if (isset($_SESSION['usuario_tipo'])) {
+if (isset($_SESSION['usuario_id'])) {
   header("location: dashboard.php");
   exit;
 }
@@ -19,7 +19,7 @@ if (isset($_SESSION['usuario_tipo'])) {
     margin: 0;
   }
 
-  body.index-login-signup {
+  body.login-page {
     overflow: hidden;
 
     background-image:
