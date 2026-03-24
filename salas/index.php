@@ -78,21 +78,107 @@ $result = $conn->query("SELECT * FROM salas ORDER BY numero_sala");
                   <td><?= htmlspecialchars(limitText($sala['descricao'], 50)) ?></td>
                   <td class="text-end">
                     <div class="btn-group" role="group" aria-label="Ações">
-                      <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" class="btn btn-outline-info btn-sm" title="Ver equipamentos">
+                      <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" class="btn btn-outline-info btn-sm" title="Adicionar equipamentos">
                         <i class="fas fa-desktop"></i>
                       </a>
-                      <a href="add_equipamentos.php?sala_id=<?= $sala['id'] ?>" class="btn btn-outline-success btn-sm" title="Adicionar equipamentos">
+                      <button type="button" class="btn btn-outline-<?= $_SESSION['usuario_tipo'] == "Direção" ? "success" : "secondary disabled" ?> btn-sm" data-bs-toggle="<?= $_SESSION['usuario_tipo'] == "Direção" ? "modal" : "" ?>" data-bs-target="#addEquip<?= $sala['id'] ?>">
                         <i class="fas fa-plus"></i>
-                      </a>
-                      <a href="edit.php?sala_id=<?= $sala['id'] ?>" class="btn btn-outline-secondary btn-sm" title="Editar">
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm <?= $_SESSION['usuario_tipo'] != "Direção" ? "disabled" : "" ?>" data-bs-toggle="<?= $_SESSION['usuario_tipo'] == "Direção" ? "modal" : "" ?>" data-bs-target="#editarSala<?= $sala['id'] ?>">
                         <i class="fas fa-pen"></i>
-                      </a>
-                      <a href="delete.php?id=<?= $sala['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Remover esta sala?')">
-                        <i class="fas fa-trash"></i>
-                      </a>
+                      </button>
+                      <?php if ($_SESSION['usuario_tipo'] == "Direção") : ?>
+                        <a href="delete.php?id=<?= $sala['id'] ?>" class="btn btn-outline-danger btn-sm" title="Remover" onclick="return confirm('Remover esta sala?')">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                      <?php else : ?>
+                        <button class="btn btn-outline-secondary btn-sm disabled">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      <?php endif; ?>
                     </div>
                   </td>
                 </tr>
+
+                <!-- Modal Add equipamento -->
+
+                <?php
+
+                $equipamentos = $conn->query("
+                  SELECT id, nome FROM equipamentos
+                  WHERE sala_id IS NULL
+                  ORDER BY nome
+                ");
+
+                ?>
+
+                <div class="modal fade" id="addEquip<?= $sala['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Adicionar equipamentos</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="add_equipamentos.php?sala_id=<?= $sala['id'] ?>">
+
+                          <div class="mb-3">
+                            <label>Equipamentos disponíveis</label>
+                            <select name="equipamento_ids[]" class="form-select" multiple size="8" required>
+                              <?php while ($e = $equipamentos->fetch_assoc()): ?>
+                                <option value="<?= $e['id'] ?>">
+                                  <?= htmlspecialchars($e['nome']) ?>
+                                </option>
+                              <?php endwhile; ?>
+                            </select>
+                            <small class="text-muted">
+                              Use Ctrl (Windows) ou Cmd (Mac) para selecionar vários
+                            </small>
+                          </div>
+
+
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-success">Adicionar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
+                      </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal editar sala -->
+                <div class="modal fade" id="editarSala<?= $sala['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar sala</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" class="mt-3" action="edit.php?sala_id=<?= $sala['id'] ?>">
+
+                          <div class="mb-3">
+                            <label>Numero da sala</label>
+                            <input type="number" name="numero_sala" class="form-control"
+                              min="1" value="<?= $sala['numero_sala'] ?>">
+                          </div>
+
+                          <div class="mb-3">
+                            <label>Descrição</label>
+                            <textarea name="descricao" class="form-control"><?= htmlspecialchars($sala['descricao']) ?></textarea>
+                          </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-success" onclick="return confirm('Deseja realmente salvar as alterações?')">Salvar Alterações</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cancelar</button>
+                      </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
               <?php endwhile; ?>
             </tbody>
           </table>

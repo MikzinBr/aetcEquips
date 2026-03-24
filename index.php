@@ -1,6 +1,16 @@
 <?php require_once 'config.php'; ?>
 <?php require_once HEADER_TEMPLATE ?>
 <?php $erro = $_GET['erro'] ?? ''; ?>
+<?php session_start(); ?>
+
+<?php
+
+if (isset($_SESSION['usuario_id'])) {
+  header("location: dashboard.php");
+  exit;
+}
+
+?>
 
 <style>
   html,
@@ -9,7 +19,7 @@
     margin: 0;
   }
 
-  body.login-signup {
+  body.login-page {
     overflow: hidden;
 
     background-image:

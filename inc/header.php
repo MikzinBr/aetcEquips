@@ -10,4 +10,4 @@
   <link rel="stylesheet" href="<?php echo BASEURL; ?>css/fontawesome-free-5.15.4-web/css/all.min.css">
 </head>
 
-<body class="bg-light login-signup">
+<body class="bg-light login-page">

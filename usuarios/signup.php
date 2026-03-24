@@ -82,7 +82,7 @@ $erro = $_GET['erro'] ?? '';
                 <i class="fas fa-check me-1"></i>
                 Criar usuário
               </button>
-              <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
+              <a href="index.php" class="btn btn-danger">Cancelar</a>
             </div>
           </form>
         </div>
