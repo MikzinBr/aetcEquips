@@ -9,7 +9,7 @@
     margin: 0;
   }
 
-  body.index-login-signup {
+  body.login-signup {
     overflow: hidden;
 
     background-image:

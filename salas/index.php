@@ -21,7 +21,7 @@ $conn = open_database();
 $result = $conn->query("SELECT * FROM salas ORDER BY numero_sala");
 ?>
 
-<div class="container-fluid px-0">
+<div class="container-fluid px-0" style="width: 90vw;">
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger">

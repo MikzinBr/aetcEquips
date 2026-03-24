@@ -37,7 +37,7 @@ $sql .= " ORDER BY a.data_registro DESC";
 $result = $conn->query($sql);
 ?>
 
-<div class="container-fluid px-0">
+<div class="container-fluid px-0" style="width: 90vw;">
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger">

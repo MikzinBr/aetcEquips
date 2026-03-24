@@ -16,8 +16,10 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
 
 ?>
 
+<div class="d-flex justify-content-center">
+
 <div class="row g-4">
-  <div class="col-lg-4">
+  <div class="col-lg-<?= $tipo_usuario == "Direção" ? "3" : "4" ?>">
     <a href="<?php echo BASEURL; ?>equipamentos" class="text-decoration-none text-reset">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body d-flex gap-3 align-items-start">
@@ -33,7 +35,7 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
     </a>
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-lg-<?= $tipo_usuario == "Direção" ? "3" : "4" ?>">
     <a href="<?php echo BASEURL; ?>avarias" class="text-decoration-none text-reset">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body d-flex gap-3 align-items-start">
@@ -49,7 +51,7 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
     </a>
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-lg-<?= $tipo_usuario == "Direção" ? "3" : "4" ?>">
     <a href="<?php echo BASEURL; ?>salas" class="text-decoration-none text-reset">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body d-flex gap-3 align-items-start">
@@ -64,6 +66,28 @@ $tipo_usuario = $_SESSION["usuario_tipo"];
       </div>
     </a>
   </div>
+
+
+  <?php if ($tipo_usuario === 'Direção') : ?>
+    <div class="col-lg-3">
+      <a href="<?php echo BASEURL; ?>direcao" class="text-decoration-none text-reset">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex gap-3 align-items-start">
+            <div class="p-3 rounded-3 bg-primary-subtle text-primary">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <div>
+              <div class="fw-semibold">Painel da Direção</div>
+              <div class="text-muted small">Indicadores, gráficos e controlo visual</div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  <?php endif; ?>
 </div>
+
+</div>
+
 
 <?php require_once FOOTER_TEMPLATE; ?>
