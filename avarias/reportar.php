@@ -1,5 +1,6 @@
 <?php
 require_once '../config.php';
+require_once '../inc/helpers.php';
 require_once DBAPI;
 
 $page_title = 'Reportar Avaria';
@@ -14,6 +15,7 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 $conn = open_database();
+ensure_profile_schema($conn);
 
 $equipamentos = $conn->query("SELECT id, nome FROM equipamentos ORDER BY nome");
 
@@ -37,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt2 = $conn->prepare("UPDATE equipamentos SET status = 'avariado' WHERE id = ?");
     $stmt2->bind_param("i", $equipamento_id);
     $stmt2->execute();
+
+    log_user_activity($conn, (int)$usuario_id, 'avaria_reportada', 'Reportou uma nova avaria no equipamento #' . $equipamento_id . '.');
 
     header("Location: index.php?msg=Avaria reportada com sucesso");
     exit;

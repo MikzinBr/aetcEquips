@@ -159,7 +159,7 @@ $equipPorEstado = [
   }
 </style>
 
-<div class="container-fluid px-0 mb-5" style="width: 90vw;">
+<div class="container-fluid px-0 mb-4 mt-4" style="width: 90vw;" data-dashboard-animate>
   <div class="soft-panel p-4 mb-4 border">
     <div class="row align-items-center g-3">
       <div class="col-lg-8">
@@ -179,12 +179,12 @@ $equipPorEstado = [
 
   <div class="row g-4 mb-4">
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100">
+      <div class="card dashboard-card h-100 dashboard-reveal">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Equipamentos registados</div>
-            <div class="display-6 fw-bold mb-0"><?= $totalEquipamentos ?></div>
-            <div class="small text-muted mt-1">Quantidade total: <?= $quantidadeTotal ?></div>
+            <div class="display-6 fw-bold mb-0" data-count-to="<?= $totalEquipamentos ?>">0</div>
+            <div class="small text-muted mt-1"><span class="metric-chip"><i class="fas fa-layer-group text-primary"></i><span>Quantidade total: <span data-count-to="<?= $quantidadeTotal ?>">0</span></span></span></div>
           </div>
           <a href="../equipamentos" title="ver equipamentos" class="mini-icon bg-success-subtle text-success"><i class="fas fa-tools"></i></a>
         </div>
@@ -192,11 +192,11 @@ $equipPorEstado = [
     </div>
 
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100">
+      <div class="card dashboard-card h-100 dashboard-reveal">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Equipamentos operacionais</div>
-            <div class="display-6 fw-bold mb-0"><?= $equipamentosOk ?></div>
+            <div class="display-6 fw-bold mb-0" data-count-to="<?= $equipamentosOk ?>">0</div>
             <div class="small text-muted mt-1"><?= $percentOk ?>% do inventário</div>
           </div>
           <a href="../equipamentos" title="ver equipamentos" class="mini-icon bg-primary-subtle text-primary border-0"><i class="fas fa-check-circle"></i></a>
@@ -205,12 +205,12 @@ $equipPorEstado = [
     </div>
 
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100">
+      <div class="card dashboard-card h-100 dashboard-reveal">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Avarias pendentes</div>
-            <div class="display-6 fw-bold mb-0"><?= $avariasPendentes ?></div>
-            <div class="small text-muted mt-1">Total de registos: <?= $totalAvarias ?></div>
+            <div class="display-6 fw-bold mb-0" data-count-to="<?= $avariasPendentes ?>">0</div>
+            <div class="small text-muted mt-1"><span class="metric-chip"><i class="fas fa-clipboard-list text-warning"></i><span>Total de registos: <span data-count-to="<?= $totalAvarias ?>">0</span></span></span></div>
           </div>
           <a href="../avarias" title="ver avarias" class="mini-icon bg-warning-subtle text-warning border-0"><i class="fas fa-exclamation-triangle"></i></a>
         </div>
@@ -218,12 +218,12 @@ $equipPorEstado = [
     </div>
 
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100">
+      <div class="card dashboard-card h-100 dashboard-reveal">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Valor estimado do inventário</div>
-            <div class="display-6 fw-bold mb-0">€<?= number_format($valorTotal, 0, ',', '.') ?></div>
-            <div class="small text-muted mt-1">Salas registadas: <?= $totalSalas ?></div>
+            <div class="display-6 fw-bold mb-0" data-count-to="<?= $valorTotal ?>" data-prefix="€">0</div>
+            <div class="small text-muted mt-1"><span class="metric-chip"><i class="fas fa-door-open text-info"></i><span>Salas registadas: <span data-count-to="<?= $totalSalas ?>">0</span></span></span></div>
           </div>
           <a class="mini-icon bg-info-subtle text-info"><i class="fas fa-euro-sign"></i></a>
         </div>
@@ -233,14 +233,14 @@ $equipPorEstado = [
 
   <div class="row g-4 mb-4">
     <div class="col-xl-5">
-      <div class="card chart-card h-100">
+      <div class="card chart-card h-100 dashboard-reveal">
         <div class="card-body">
           <div class="fw-semibold mb-1">Estado dos equipamentos</div>
           <div class="text-muted small mb-4">Distribuição real com base no campo de estado do inventário</div>
 
           <div class="donut" style="background: conic-gradient(#198754 0 <?= $percentOk ?>%, #dc3545 <?= $percentOk ?>% 100%);">
             <div class="donut-center">
-              <div class="fs-2"><?= $percentOk ?>%</div>
+              <div class="fs-2" data-count-to="<?= $percentOk ?>" data-suffix="%">0%</div>
               <div class="text-muted small">operacionais</div>
             </div>
           </div>
@@ -264,7 +264,7 @@ $equipPorEstado = [
     </div>
 
     <div class="col-xl-7">
-      <div class="card chart-card h-100">
+      <div class="card chart-card h-100 dashboard-reveal">
         <div class="card-body">
           <div class="fw-semibold mb-1">Equipamentos por sala</div>
           <div class="text-muted small mb-4">Top salas com mais equipamentos registados</div>
@@ -285,7 +285,7 @@ $equipPorEstado = [
                     </div>
                     <span class="text-muted small"><?= $total ?> tipo(s) de equipamento</span>
                   </div>
-                  <div class="room-bar"><span style="width: <?= $largura ?>%"></span></div>
+                  <div class="room-bar"><span data-bar-width="<?= $largura ?>"></span></div>
                 </div>
               <?php endforeach; ?>
             </div>
@@ -299,7 +299,7 @@ $equipPorEstado = [
 
   <div class="row g-4">
     <div class="col-xl-5">
-      <div class="card chart-card h-100">
+      <div class="card chart-card h-100 dashboard-reveal">
         <div class="card-body">
           <div class="fw-semibold mb-1">Resumo rápido</div>
           <div class="text-muted small mb-4">Indicadores úteis para decisão</div>
@@ -327,7 +327,7 @@ $equipPorEstado = [
     </div>
 
     <div class="col-xl-7">
-      <div class="card chart-card h-100">
+      <div class="card chart-card h-100 dashboard-reveal">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div>

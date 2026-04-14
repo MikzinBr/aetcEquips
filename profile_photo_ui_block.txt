@@ -1,0 +1,20 @@
+              <div class="col-12">
+                <label class="form-label">__LABEL__</label>
+                <input type="file" name="foto" class="form-control js-profile-photo-input" accept="image/*">
+                <input type="hidden" name="cropped_foto_data" class="js-profile-photo-data">
+                <div class="form-text">Pode enviar a imagem e ajustar zoom/posição antes de salvar.</div>
+
+                <div class="profile-photo-uploader mt-3">
+                  <div class="profile-photo-preview-wrap">
+                    <img src="__PREVIEW__" alt="Pré-visualização" class="profile-photo-preview js-profile-photo-preview">
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button type="button" class="btn btn-outline-primary btn-sm js-open-photo-editor" disabled>
+                      <i class="fas fa-crop-alt me-1"></i>Ajustar imagem
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm js-reset-photo-editor" disabled>
+                      <i class="fas fa-undo me-1"></i>Voltar à original
+                    </button>
+                  </div>
+                </div>
+              </div>

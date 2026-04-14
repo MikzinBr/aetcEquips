@@ -1,5 +1,6 @@
 <?php
 require_once '../config.php';
+require_once '../inc/helpers.php';
 require_once DBAPI;
 session_start();
 
@@ -8,7 +9,7 @@ if (!isset($_SESSION['usuario_id'])) {
   exit;
 }
 
-if ($_SESSION['usuario_tipo'] === 'professor') {
+if (strcasecmp((string)($_SESSION['usuario_tipo'] ?? ''), 'Professor') === 0) {
   header("Location: index.php?erro=Você não tem permissão para resolver avarias");
   exit;
 }
@@ -21,6 +22,7 @@ if ($id <= 0) {
 }
 
 $conn = open_database();
+ensure_profile_schema($conn);
 
 /* 1) Marca a avaria como resolvida */
 $stmt = $conn->prepare("UPDATE avarias SET resolvido = 1 WHERE id = ?");
@@ -60,6 +62,8 @@ if (!$tem_pendentes) {
   $stmt->execute();
   $stmt->close();
 }
+
+log_user_activity($conn, (int)$_SESSION['usuario_id'], 'avaria_resolvida', 'Marcou a avaria #' . $id . ' como resolvida.');
 
 $conn->close();
 
