@@ -93,9 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $erro = $_GET['erro'] ?? '';
 ?>
 
-<div class="container-fluid px-0">
+<div class="container-fluid px-0 pt-3 dashboard-reveal" style="width: 90vw" data-dashboard-animate>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <div class="h5 mb-0">Editar perfil</div>
     <a href="profile.php?id=<?= (int)$usuario['id'] ?>" class="btn btn-outline-secondary btn-sm">
       <i class="fas fa-arrow-left me-1"></i>
       Voltar ao perfil
@@ -112,6 +111,7 @@ $erro = $_GET['erro'] ?? '';
     <div class="col-12 col-lg-7 col-xl-8">
       <div class="card border-0 shadow-sm">
         <div class="card-body">
+          <div class="h4 mb-3">Editar perfil</div>
           <form method="POST" enctype="multipart/form-data">
             <div class="row g-3">
               <div class="col-12 col-md-8">

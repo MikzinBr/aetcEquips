@@ -188,3 +188,13 @@ function delete_profile_photo(?string $relativePath): void
     @unlink($absolutePath);
   }
 }
+
+function fetch_scalar(mysqli $conn, string $sql): int
+{
+  $result = $conn->query($sql);
+  if (!$result) {
+    return 0;
+  }
+  $row = $result->fetch_row();
+  return (int)($row[0] ?? 0);
+}

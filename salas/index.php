@@ -27,7 +27,7 @@ while ($row = $result->fetch_assoc()) {
 $equipamentosDisponiveisNovo = $conn->query("SELECT id, nome FROM equipamentos WHERE sala_id IS NULL ORDER BY nome");
 ?>
 
-<div class="container-fluid px-0" style="width: 90vw;">
+<div class="container-fluid px-0 dashboard-reveal" style="width: 90vw;" data-dashboard-animate>
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
@@ -162,9 +162,11 @@ $equipamentosDisponiveisNovo = $conn->query("SELECT id, nome FROM equipamentos W
                 >
                   <td>
                     <div class="table-main-cell">
-                      <span class="table-main-icon"><i class="fas fa-door-open"></i></span>
+                      <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" class="table-main-icon" style="text-decoration: none"><i class="fas fa-door-open"></i></a>
                       <div class="table-main-stack">
-                        <div class="table-main-title">Sala <?= htmlspecialchars($sala['numero_sala']) ?></div>
+                        <a href="../equipamentos?sala_id=<?= $sala['id'] ?>" style="text-decoration: none">
+                          <div class="table-main-title">Sala <?= htmlspecialchars($sala['numero_sala']) ?></div>
+                        </a>
                         <div class="table-main-meta"><?= htmlspecialchars(limitText($sala['descricao'], 50)) ?></div>
                       </div>
                     </div>

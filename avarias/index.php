@@ -13,6 +13,10 @@ if (!isset($_SESSION['usuario_id'])) {
   exit;
 }
 
+if (isset($_GET['equipamento_id'])) {
+  $equip_id = $_GET['equipamento_id'];
+}
+
 $conn = open_database();
 
 $erro = $_GET['erro'] ?? '';
@@ -27,6 +31,10 @@ $sql = "
   JOIN equipamentos e ON a.equipamento_id = e.id
   JOIN usuarios u ON a.usuario_id = u.id
 ";
+
+if ($equip_id) {
+  $sql = $sql . "WHERE e.id = " . $equip_id;
+}
 
 if ($tipo === 'Professor') {
   $sql .= " WHERE a.usuario_id = $usuario_id";
@@ -48,7 +56,7 @@ ksort($equipamentosMap, SORT_NATURAL | SORT_FLAG_CASE);
 ksort($usuariosMap, SORT_NATURAL | SORT_FLAG_CASE);
 ?>
 
-<div class="container-fluid px-0" style="width: 90vw;">
+<div class="container-fluid px-0 dashboard-reveal" style="width: 90vw;" data-dashboard-animate>
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>

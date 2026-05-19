@@ -35,7 +35,7 @@ while ($row = $result->fetch_assoc()) {
 }
 ?>
 
-<div class="container-fluid px-0" style="width: 90vw">
+<div class="container-fluid px-0 dashboard-reveal" style="width: 90vw" data-dashboard-animate>
   <?php if ($erro) : ?>
     <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
   <?php endif; ?>
@@ -176,9 +176,13 @@ while ($row = $result->fetch_assoc()) {
               >
                 <td>
                   <div class="table-main-cell">
-                    <img src="<?= htmlspecialchars(get_avatar_url($u)) ?>" alt="Avatar" class="table-avatar">
+                    <a href="profile.php?id=<?= (int)$u['id'] ?>">
+                      <img src="<?= htmlspecialchars(get_avatar_url($u)) ?>" alt="Avatar" class="table-avatar">
+                    </a>
                     <div class="table-main-stack">
-                      <div class="table-main-title"><?= limitText(htmlspecialchars($u['nome']), 32) ?></div>
+                      <a href="profile.php?id=<?= (int)$u['id'] ?>" style="text-decoration: none">
+                        <div class="table-main-title"><?= limitText(htmlspecialchars($u['nome']), 32) ?></div>
+                      </a>
                       <div class="table-main-meta">ID #<?= (int)$u['id'] ?></div>
                     </div>
                   </div>
@@ -214,7 +218,7 @@ while ($row = $result->fetch_assoc()) {
               <?php
               ob_start();
               ?>
-<div class="modal fade" id="verPerfil<?= (int)$u['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+              <div class="modal fade" id="verPerfil<?= (int)$u['id'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">

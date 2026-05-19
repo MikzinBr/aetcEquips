@@ -83,7 +83,7 @@ $msg = $_GET['msg'] ?? '';
 $erro = $_GET['erro'] ?? '';
 ?>
 
-<div class="container-fluid px-0" style="width: 92vw;">
+<div class="container-fluid px-0 dashboard-reveal" style="width: 90vw;" data-dashboard-animate>
   <?php if ($erro): ?>
     <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
   <?php endif; ?>
@@ -92,9 +92,16 @@ $erro = $_GET['erro'] ?? '';
     <div class="alert alert-success"><?= htmlspecialchars($msg) ?></div>
   <?php endif; ?>
 
-  <div class="row g-4">
+  <div class="d-flex align-items-center justify-content-between mt-3">
+    <a href="../usuarios/" class="btn btn-outline-secondary btn-sm">
+      <i class="fas fa-arrow-left me-1"></i>
+      Voltar
+    </a>
+  </div>
+
+  <div class="row g-4 pt-3">
     <div class="col-12 col-xl-4">
-      <div class="card border-0 shadow-sm h-100">
+      <div class="card border-0 shadow-sm h-20">
         <div class="card-body text-center">
           <img
             src="<?= htmlspecialchars(get_avatar_url($usuario)) ?>"
@@ -152,46 +159,7 @@ $erro = $_GET['erro'] ?? '';
     </div>
 
     <div class="col-12 col-xl-8">
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-between mb-3">
-            <div>
-              <div class="h5 mb-0">Resumo do perfil</div>
-              <div class="text-muted small">Visão rápida das principais informações do utilizador.</div>
-            </div>
-          </div>
-
-          <div class="row g-3">
-            <div class="col-md-4">
-              <div class="rounded-4 border bg-light p-3 h-100">
-                <div class="text-muted small mb-1">Identidade</div>
-                <div class="fw-semibold"><?= htmlspecialchars($usuario['nome']) ?></div>
-                <div class="small text-muted">Perfil de <?= htmlspecialchars($usuario['tipo']) ?></div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="rounded-4 border bg-light p-3 h-100">
-                <div class="text-muted small mb-1">Contacto</div>
-                <div class="fw-semibold"><?= htmlspecialchars($usuario['telefone'] ?: 'Sem telefone') ?></div>
-                <div class="small text-muted"><?= htmlspecialchars($usuario['email']) ?></div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="rounded-4 border bg-light p-3 h-100">
-                <div class="text-muted small mb-1">Atividade</div>
-                <div class="fw-semibold">
-                  <?= !empty($usuario['ultimo_login_at']) ? date('d/m/Y H:i', strtotime($usuario['ultimo_login_at'])) : 'Sem login' ?>
-                </div>
-                <div class="small text-muted">Último acesso registado</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card border-0 shadow-sm">
+      <div class="card border-0 shadow-sm h-25 overflow-auto">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div>

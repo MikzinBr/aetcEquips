@@ -59,7 +59,7 @@ ksort($categorias, SORT_NATURAL | SORT_FLAG_CASE);
 ksort($statuses, SORT_NATURAL | SORT_FLAG_CASE);
 ?>
 
-<div class="container-fluid px-0" style="width: 90vw;">
+<div class="container-fluid px-0 dashboard-reveal" style="width: 90vw;" data-dashboard-animate>
 
   <?php if ($erro) : ?>
     <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
@@ -201,10 +201,9 @@ ksort($statuses, SORT_NATURAL | SORT_FLAG_CASE);
               >
                 <td>
                   <div class="table-main-cell">
-                    <span class="table-main-icon"><i class="fas fa-desktop"></i></span>
+                    <a href="../avarias?equipamento_id=<?= $e['id'] ?>" class="table-main-icon" style="text-decoration: none"><i class="fas fa-desktop"></i></a>
                     <div class="table-main-stack">
-                      <div class="table-main-title"><?= limitText(htmlspecialchars($e['nome']), 28) ?></div>
-
+                      <a href="../avarias?equipamento_id=<?= $e['id'] ?>" class="table-main-title" style="text-decoration: none"><?= limitText(htmlspecialchars($e['nome']), 28) ?></a>
                     </div>
                   </div>
                 </td>

@@ -20,7 +20,7 @@ $senha_direcao = $stmt->get_result()->fetch_array()[0] ?? '';
 $stmt->close();
 
 if (!password_verify($senha_confirmacao, $senha_direcao)) {
-  header("location: signup.php?erro=Senha de confirmação incorreta");
+  header("location: index.php?erro=Senha de confirmação incorreta");
   exit;
 }
 
@@ -34,12 +34,12 @@ $tipo      = $_POST['tipo'] ?? '';
 $tiposPermitidos = ['Professor', 'Técnico', 'Direção'];
 
 if (!$nome || !$email || !$senha || !$confirmar || !in_array($tipo, $tiposPermitidos, true)) {
-  header("Location: signup.php?erro=Preencha todos os campos obrigatórios.");
+  header("Location: index.php?erro=Preencha todos os campos obrigatórios.");
   exit;
 }
 
 if ($senha !== $confirmar) {
-  header("Location: signup.php?erro=As senhas não coincidem.");
+  header("Location: index.php?erro=As senhas não coincidem.");
   exit;
 }
 
@@ -49,7 +49,7 @@ $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-  header("Location: signup.php?erro=Este email já está cadastrado.");
+  header("Location: index.php?erro=Este email já está cadastrado.");
   exit;
 }
 $stmt->close();
@@ -60,7 +60,7 @@ try {
     $fotoPath = save_profile_photo($_FILES['foto'], $_POST['cropped_foto_data'] ?? '');
   }
 } catch (RuntimeException $e) {
-  header('Location: signup.php?erro=' . urlencode($e->getMessage()));
+  header('Location: index.php?erro=' . urlencode($e->getMessage()));
   exit;
 }
 

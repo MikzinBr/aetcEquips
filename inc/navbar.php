@@ -40,18 +40,18 @@ $sessionUser = ['foto' => $foto];
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav nav-pill-custom mx-auto">
+        <li class="nav-item"><a class="nav-link <?= $active_dashboard ? 'active' : '' ?>" href="<?= BASEURL ?>dashboard.php"><i class="fas fa-home"></i><span>Início</span></a></li>
         <?php if ($tipo === 'Direção') : ?>
           <li class="nav-item">
-            <a class="nav-link <?= is_active($path, 'direcao') ? 'active' : '' ?>" href="<?= BASEURL ?>direcao"><i class="fas fa-chart-pie"></i><span>Painel</span></a>
+            <a class="nav-link <?= is_active($path, 'direcao') ? 'active' : '' ?>" href="<?= BASEURL ?>direcao"><i class="fas fa-chart-pie"></i><span>Administração</span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link <?= is_active($path, 'usuarios') ? 'active' : '' ?>" href="<?= BASEURL ?>usuarios"><i class="fas fa-users"></i><span>Perfis</span></a>
           </li>
         <?php endif; ?>
-        <li class="nav-item"><a class="nav-link <?= $active_dashboard ? 'active' : '' ?>" href="<?= BASEURL ?>dashboard.php"><i class="fas fa-home"></i><span>Início</span></a></li>
+        <li class="nav-item"><a class="nav-link <?= $active_salas ? 'active' : '' ?>" href="<?= BASEURL ?>salas"><i class="fas fa-door-open"></i><span>Salas</span></a></li>
         <li class="nav-item"><a class="nav-link <?= $active_equip ? 'active' : '' ?>" href="<?= BASEURL ?>equipamentos"><i class="fas fa-tools"></i><span>Equipamentos</span></a></li>
         <li class="nav-item"><a class="nav-link <?= $active_avarias ? 'active' : '' ?>" href="<?= BASEURL ?>avarias"><i class="fas fa-exclamation-triangle"></i><span>Avarias</span></a></li>
-        <li class="nav-item"><a class="nav-link <?= $active_salas ? 'active' : '' ?>" href="<?= BASEURL ?>salas"><i class="fas fa-door-open"></i><span>Salas</span></a></li>
       </ul>
 
       <div class="app-user-box ms-xl-3 mt-3 mt-xl-0">

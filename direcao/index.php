@@ -24,16 +24,6 @@ require_once NAVBAR_TEMPLATE;
 
 $conn = open_database();
 
-function fetch_scalar(mysqli $conn, string $sql): int
-{
-  $result = $conn->query($sql);
-  if (!$result) {
-    return 0;
-  }
-  $row = $result->fetch_row();
-  return (int)($row[0] ?? 0);
-}
-
 $totalEquipamentos = fetch_scalar($conn, 'SELECT COUNT(*) FROM equipamentos');
 $totalSalas = fetch_scalar($conn, 'SELECT COUNT(*) FROM salas');
 $totalAvarias = fetch_scalar($conn, 'SELECT COUNT(*) FROM avarias');
@@ -45,6 +35,21 @@ $valorTotal = fetch_scalar($conn, 'SELECT COALESCE(SUM(quantidade * custo_unitar
 
 $percentOk = $totalEquipamentos > 0 ? round(($equipamentosOk / $totalEquipamentos) * 100) : 0;
 $percentAvariados = $totalEquipamentos > 0 ? 100 - $percentOk : 0;
+
+$graficoPizza = [
+  [
+    'label' => 'OK',
+    'valor' => $equipamentosOk,
+    'percent' => $percentOk,
+    'cor' => '#198754'
+  ],
+  [
+    'label' => 'Avariado',
+    'valor' => $equipamentosAvariados,
+    'percent' => $percentAvariados,
+    'cor' => '#dc3545'
+  ]
+];
 
 $salas = [];
 $maiorSala = 0;
@@ -104,32 +109,25 @@ $equipPorEstado = [
     font-size: 1.2rem;
   }
 
-  .donut {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
+  .pie-chart-wrap {
+    width: 240px;
     margin: 0 auto;
-    position: relative;
   }
 
-  .donut::after {
-    content: '';
-    position: absolute;
-    inset: 32px;
-    background: #fff;
-    border-radius: 50%;
+  .pie-chart-svg {
+    width: 240px;
+    height: 240px;
+    display: block;
+    margin: 0 auto;
+    overflow: visible;
   }
 
-  .donut-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    text-align: center;
-    font-weight: 600;
+  .pie-chart-label {
+    font-weight: 700;
+    fill: #ffffff;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
   }
 
   .legend-dot {
@@ -159,27 +157,30 @@ $equipPorEstado = [
   }
 </style>
 
-<div class="container-fluid px-0 mb-4 mt-4" style="width: 90vw;" data-dashboard-animate>
-  <div class="soft-panel p-4 mb-4 border">
-    <div class="row align-items-center g-3">
+<div class="container-fluid px-0 mb-4 mt-4 dashboard-reveal" style="width: 90vw;" data-dashboard-animate>
+  <section class="page-hero m-4">
+    <div class="row align-items-center g-4">
       <div class="col-lg-8">
-        <h2 class="h3 mb-2">Painel executivo da Direção</h2>
-        <p class="text-muted mb-0">Acompanhe rapidamente o estado do inventário, as avarias pendentes e a distribuição dos equipamentos pelas salas.</p>
+        <span class="badge bg-white text-primary mb-3 px-3 py-2">Administração</span>
+        <div class="h2 mb-2">Painel administrativo</div>
+        <p class="mb-0">Veja relatórios rápidos sobre o estado dos equipamentos e das salas</p>
       </div>
-      <div class="col-lg-4 text-lg-end">
-        <a href="<?= BASEURL ?>equipamentos" class="btn btn-primary me-2 mb-2 mb-lg-0">
-          <i class="fas fa-tools me-2"></i>Gerir equipamentos
-        </a>
-        <a href="<?= BASEURL ?>avarias" class="btn btn-outline-secondary">
-          <i class="fas fa-exclamation-triangle me-2"></i>Ver avarias
-        </a>
+      <div class="col-lg-4">
+        <div class="d-flex gap-2 justify-content-lg-end flex-wrap">
+          <a href="<?= BASEURL ?>equipamentos" class="btn btn-success me-2 mb-2 mb-lg-0">
+            <i class="fas fa-tools me-2"></i>Gerir equipamentos
+          </a>
+          <a href="<?= BASEURL ?>avarias" class="btn btn-success">
+            <i class="fas fa-exclamation-triangle me-2"></i>Ver avarias
+          </a>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <div class="row g-4 mb-4">
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100 dashboard-reveal">
+      <div class="card dashboard-card h-100">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Equipamentos registados</div>
@@ -192,7 +193,7 @@ $equipPorEstado = [
     </div>
 
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100 dashboard-reveal">
+      <div class="card dashboard-card h-100">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Equipamentos operacionais</div>
@@ -205,7 +206,7 @@ $equipPorEstado = [
     </div>
 
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100 dashboard-reveal">
+      <div class="card dashboard-card h-100">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Avarias pendentes</div>
@@ -218,7 +219,7 @@ $equipPorEstado = [
     </div>
 
     <div class="col-md-6 col-xl-3">
-      <div class="card dashboard-card h-100 dashboard-reveal">
+      <div class="card dashboard-card h-100">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <div class="text-muted small">Valor estimado do inventário</div>
@@ -233,18 +234,113 @@ $equipPorEstado = [
 
   <div class="row g-4 mb-4">
     <div class="col-xl-5">
-      <div class="card chart-card h-100 dashboard-reveal">
+      <div class="card chart-card h-100">
         <div class="card-body">
-          <div class="fw-semibold mb-1">Estado dos equipamentos</div>
-          <div class="text-muted small mb-4">Distribuição real com base no campo de estado do inventário</div>
+          <div class="fw-semibold mb-4 h5">Estado dos equipamentos</div>
 
-          <div class="donut" style="background: conic-gradient(#198754 0 <?= $percentOk ?>%, #dc3545 <?= $percentOk ?>% 100%);">
-            <div class="donut-center">
-              <div class="fs-2" data-count-to="<?= $percentOk ?>" data-suffix="%">0%</div>
-              <div class="text-muted small">operacionais</div>
-            </div>
+          <?php
+            $cx = 120;
+            $cy = 120;
+            $r = 105;
+            $anguloInicial = -90;
+          ?>
+
+          <div class="pie-chart-wrap">
+            <svg viewBox="0 0 240 240" class="pie-chart-svg" aria-label="Gráfico de pizza do estado dos equipamentos">
+              <?php if ($totalEquipamentos > 0) : ?>
+
+                <?php foreach ($graficoPizza as $item) : ?>
+                  <?php
+                    if ($item['valor'] <= 0) {
+                      continue;
+                    }
+
+                    $anguloFat = ($item['valor'] / $totalEquipamentos) * 360;
+                    $anguloFinal = $anguloInicial + $anguloFat;
+
+                    if ($item['percent'] >= 100) :
+                  ?>
+                      <circle cx="<?= $cx ?>" cy="<?= $cy ?>" r="<?= $r ?>" fill="<?= $item['cor'] ?>"></circle>
+
+                      <text
+                        x="<?= $cx ?>"
+                        y="<?= $cy ?>"
+                        class="pie-chart-label"
+                        style="font-size: 28px;"
+                      >
+                        <?= $item['percent'] ?>%
+                      </text>
+
+                  <?php
+                      $anguloInicial = $anguloFinal;
+                      continue;
+                    endif;
+
+                    $x1 = $cx + $r * cos(deg2rad($anguloInicial));
+                    $y1 = $cy + $r * sin(deg2rad($anguloInicial));
+                    $x2 = $cx + $r * cos(deg2rad($anguloFinal));
+                    $y2 = $cy + $r * sin(deg2rad($anguloFinal));
+
+                    $largeArc = $anguloFat > 180 ? 1 : 0;
+                    $path = "M $cx,$cy L $x1,$y1 A $r,$r 0 $largeArc,1 $x2,$y2 Z";
+
+                    $anguloMeio = $anguloInicial + ($anguloFat / 2);
+                    $textoPercent = $item['percent'] . '%';
+
+                    if ($anguloFat <= 20) {
+                      $labelR = $r * 0.80;
+                    } elseif ($anguloFat <= 45) {
+                      $labelR = $r * 0.70;
+                    } elseif ($anguloFat <= 180) {
+                      $labelR = $r * 0.58;
+                    } else {
+                      $labelR = $r * 0.45;
+                    }
+
+                    $labelX = $cx + $labelR * cos(deg2rad($anguloMeio));
+                    $labelY = $cy + $labelR * sin(deg2rad($anguloMeio));
+
+                    if ($anguloFat > 180) {
+                      $fontSize = 28;
+                    } elseif ($anguloFat > 120) {
+                      $fontSize = 24;
+                    } elseif ($anguloFat > 60) {
+                      $fontSize = 20;
+                    } else {
+                      $larguraDisponivel = 2 * $labelR * sin(deg2rad($anguloFat / 2));
+                      $fontSize = (int) floor($larguraDisponivel / (max(strlen($textoPercent), 1) * 0.62));
+                      $fontSize = max(11, min(20, $fontSize));
+                    }
+                  ?>
+
+                  <path d="<?= $path ?>" fill="<?= $item['cor'] ?>" stroke="#ffffff" stroke-width="1"></path>
+
+                  <text
+                    x="<?= $labelX ?>"
+                    y="<?= $labelY ?>"
+                    class="pie-chart-label"
+                    style="font-size: <?= $fontSize ?>px;"
+                  >
+                    <?= $textoPercent ?>
+                  </text>
+
+                  <?php $anguloInicial = $anguloFinal; ?>
+                <?php endforeach; ?>
+
+              <?php else : ?>
+                <circle cx="<?= $cx ?>" cy="<?= $cy ?>" r="<?= $r ?>" fill="#e9ecef"></circle>
+
+                <text
+                  x="<?= $cx ?>"
+                  y="<?= $cy ?>"
+                  class="pie-chart-label"
+                  style="font-size: 28px; fill: #212529;"
+                >
+                  0%
+                </text>
+              <?php endif; ?>
+            </svg>
           </div>
-
           <div class="mt-4 d-grid gap-2">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center gap-2"><span class="legend-dot" style="background:#198754"></span><span>OK</span></div>
@@ -254,21 +350,15 @@ $equipPorEstado = [
               <div class="d-flex align-items-center gap-2"><span class="legend-dot" style="background:#dc3545"></span><span>Avariado</span></div>
               <strong><?= $equipPorEstado['avariado'] ?></strong>
             </div>
-            <div class="d-flex align-items-center justify-content-between text-muted small pt-2 border-top mt-2">
-              <span>Percentagem com problema</span>
-              <strong><?= $percentAvariados ?>%</strong>
-            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="col-xl-7">
-      <div class="card chart-card h-100 dashboard-reveal">
+      <div class="card chart-card h-100">
         <div class="card-body">
-          <div class="fw-semibold mb-1">Equipamentos por sala</div>
-          <div class="text-muted small mb-4">Top salas com mais equipamentos registados</div>
-
+          <div class="fw-semibold mb-4 h5">Equipamentos por sala</div>
           <?php if (!empty($salas)) : ?>
             <div class="d-grid gap-3">
               <?php foreach ($salas as $sala) : ?>
@@ -278,7 +368,7 @@ $equipPorEstado = [
                   $largura = $maiorSala > 0 ? round(($total / $maiorSala) * 100) : 0;
                 ?>
                 <div>
-                  <div class="d-flex justify-content-between align-items-center mb-1">
+                  <div class="d-flex justify-content-between align-items-center mb-1" style="overflow: auto">
                     <div>
                       <span class="fw-semibold">Sala <?= htmlspecialchars($sala['numero_sala']) ?></span>
                       <span class="text-muted small ms-2"><?= $quantidadeSala ?> unidade(s)</span>
@@ -299,10 +389,9 @@ $equipPorEstado = [
 
   <div class="row g-4">
     <div class="col-xl-5">
-      <div class="card chart-card h-100 dashboard-reveal">
+      <div class="card chart-card h-100">
         <div class="card-body">
-          <div class="fw-semibold mb-1">Resumo rápido</div>
-          <div class="text-muted small mb-4">Indicadores úteis para decisão</div>
+          <div class="fw-semibold mb-1 h5">Resumo rápido</div>
 
           <div class="list-group list-group-flush">
             <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
@@ -327,12 +416,11 @@ $equipPorEstado = [
     </div>
 
     <div class="col-xl-7">
-      <div class="card chart-card h-100 dashboard-reveal">
+      <div class="card chart-card h-100">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-              <div class="fw-semibold">Últimas avarias registadas</div>
-              <div class="text-muted small">Baseado nos campos reais da tabela avarias</div>
+              <div class="fw-semibold h5">Últimas avarias registadas</div>
             </div>
             <a href="<?= BASEURL ?>avarias" class="btn btn-outline-secondary btn-sm">Abrir módulo</a>
           </div>

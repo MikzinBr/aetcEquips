@@ -913,7 +913,7 @@ textarea:focus {
 .dashboard-reveal {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity .55s ease, transform .55s ease;
+  transition: opacity 0.1s ease, transform 0.1s ease;
 }
 
 .dashboard-reveal.is-visible {
